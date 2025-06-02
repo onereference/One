@@ -11,10 +11,10 @@ export default function SignupPage() {
 
   useEffect(() => {
     if (!isLoading) {
-      if (isLoggedIn && userType) { // If already logged in (e.g. signed up and page reloaded), redirect
+      if (isLoggedIn && userType) { 
         router.push(userType === 'agency' ? '/onboarding/agency' : '/onboarding/individual');
       } else if (!selectedUserType) {
-        router.push("/");
+        router.push("/user-type-selection"); // Redirect if no type selected
       }
     }
   }, [selectedUserType, isLoading, isLoggedIn, userType, router]);
@@ -28,10 +28,8 @@ export default function SignupPage() {
   }
   
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-8rem)] py-12">
+    <div className="flex items-center justify-center min-h-[calc(100vh-16rem)] py-12"> {/* Adjusted min-height */}
       <AuthForm mode="signup" userType={selectedUserType} />
     </div>
   );
 }
-
-    

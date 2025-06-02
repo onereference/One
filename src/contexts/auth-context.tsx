@@ -9,7 +9,7 @@ export type UserType = 'agency' | 'individual' | null;
 interface AuthContextType {
   isLoggedIn: boolean;
   userType: UserType;
-  userEmail: string | null; // Store user email
+  userEmail: string | null; 
   onboardingComplete: boolean;
   login: (type: UserType, email: string, redirectTo?: string) => void;
   signup: (type: UserType, email: string) => void;
@@ -53,16 +53,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoading(false);
   }, []);
 
-  const updateLocalStorage = (data: Partial<AuthContextType>) => {
-    const currentAuth = JSON.parse(localStorage.getItem('onereference-auth') || '{}');
+  const updateLocalStorage = (data: Partial<AuthContextType & { loggedIn: boolean, type: UserType, email: string | null, onboarding: boolean }>) => {
+    const currentAuthString = localStorage.getItem('onereference-auth');
+    const currentAuth = currentAuthString ? JSON.parse(currentAuthString) : {};
     localStorage.setItem('onereference-auth', JSON.stringify({ ...currentAuth, ...data }));
   };
+  
 
   const login = (type: UserType, email: string, redirectTo?: string) => {
     setIsLoggedIn(true);
     setUserType(type);
     setUserEmail(email);
-    // onboardingComplete status is already loaded from localStorage or set by signup/completeOnboarding
+    // onboardingComplete status is assumed to be correct from localStorage or signup
     updateLocalStorage({ loggedIn: true, type, email, onboarding: onboardingComplete });
 
     if (!onboardingComplete) {
@@ -75,22 +77,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signup = (type: UserType, email: string) => {
-    setIsLoggedIn(true); // User is "logged in" immediately after signup for onboarding
+    setIsLoggedIn(true); 
     setUserType(type);
     setUserEmail(email);
-    setOnboardingComplete(false); // New users need onboarding
+    setOnboardingComplete(false); 
     updateLocalStorage({ loggedIn: true, type, email, onboarding: false });
     router.push(type === 'agency' ? '/onboarding/agency' : '/onboarding/individual');
   };
   
   const completeOnboarding = () => {
     setOnboardingComplete(true);
-    updateLocalStorage({ onboarding: true });
-    // Redirect to dashboard after completing onboarding
+    updateLocalStorage({ onboarding: true, loggedIn: isLoggedIn, type: userType, email: userEmail });
     if (userType) {
       router.push(userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard');
     } else {
-      router.push('/'); // Fallback if userType is somehow null
+      router.push('/'); 
     }
   };
 
@@ -98,10 +99,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setIsLoggedIn(false);
     setUserType(null);
     setUserEmail(null);
-    setOnboardingComplete(false); // Reset onboarding status
-    // selectedUserType remains to allow easy re-login selection
-    localStorage.removeItem('onereference-auth');
-    router.push('/');
+    setOnboardingComplete(false); 
+    // selectedUserType is kept so user doesn't have to re-select it on next login attempt
+    localStorage.removeItem('onereference-auth'); // Clears loggedIn, type, email, onboarding
+    router.push('/'); // Redirect to the new landing page
   };
   
   const setSelectedUserType = (type: UserType) => {
@@ -139,5 +140,3 @@ export function useAuth() {
   }
   return context;
 }
-
-    
