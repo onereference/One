@@ -6,24 +6,23 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
-  const { selectedUserType, isLoading, currentUser, userProfile } = useAuth(); // Use currentUser and userProfile
+  const { selectedUserType, isLoading, currentUser, userProfile } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
     if (!isLoading) {
-      if (currentUser && userProfile) { // User is already logged in and profile exists
-         if (!userProfile.onboardingComplete) {
-            router.push(userProfile.userType === 'agency' ? '/onboarding/agency' : '/onboarding/individual');
-         } else {
-            router.push(userProfile.userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard');
-         }
+      if (currentUser && userProfile) { // User is logged in and profile exists
+        if (!userProfile.onboardingComplete) {
+          router.push(userProfile.userType === 'agency' ? '/onboarding/agency' : '/onboarding/individual');
+        } else {
+          router.push(userProfile.userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard');
+        }
       } else if (!selectedUserType && !currentUser) { // Not logged in and no type selected
-        router.push("/user-type-selection"); 
+        router.push("/user-type-selection");
       }
     }
   }, [selectedUserType, isLoading, currentUser, userProfile, router]);
 
-  // Show loading if still loading, or if no selectedUserType to pass to AuthForm, or if already logged in
   if (isLoading || !selectedUserType || (currentUser && userProfile)) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-8rem)]">
@@ -31,9 +30,9 @@ export default function SignupPage() {
       </div>
     );
   }
-  
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-16rem)] py-12"> {/* Adjusted min-height */}
+    <div className="flex items-center justify-center min-h-[calc(100vh-16rem)] py-12">
       <AuthForm mode="signup" userType={selectedUserType} />
     </div>
   );
