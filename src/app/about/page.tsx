@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { Users, Zap, Target } from "lucide-react";
+import { Users, Zap, Target, ShieldCheck, Lock, Eye, Handshake } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -16,7 +16,7 @@ export default function AboutPage() {
             We are dedicated to revolutionizing the way professional references are managed, making the process transparent, efficient, and secure for everyone.
           </p>
           <Image 
-            src="https://placehold.co/800x400.png/1A202C/FFFFFF?text=Our+Team+Vibes" 
+            src="https://placehold.co/800x400.png" 
             alt="Diverse team collaborating" 
             width={800} 
             height={400} 
@@ -41,7 +41,7 @@ export default function AboutPage() {
             </div>
             <div className="text-center">
               <Image 
-                src="https://placehold.co/500x350.png/1A202C/FFA500?text=Mission+Focus" 
+                src="https://placehold.co/500x350.png" 
                 alt="Abstract image representing mission focus" 
                 width={500} 
                 height={350} 
@@ -57,12 +57,12 @@ export default function AboutPage() {
           <h2 className="text-4xl font-bold font-headline mb-10 text-white">Our Core Values</h2>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {[
-              { icon: ShieldCheckIcon, title: "Integrity", description: "Upholding the highest standards of honesty and ethical conduct in all our operations." },
+              { icon: ShieldCheck, title: "Integrity", description: "Upholding the highest standards of honesty and ethical conduct in all our operations." },
               { icon: Zap, title: "Innovation", description: "Continuously improving and innovating to provide the best solutions for our users." },
               { icon: Users, title: "User-Centricity", description: "Putting our users' needs at the heart of everything we design and build." },
-              { icon: LockIcon, title: "Security", description: "Prioritizing data protection and privacy with state-of-the-art security measures." },
-              { icon: TransparencyIcon, title: "Transparency", description: "Fostering open communication and clear processes for all stakeholders." },
-              { icon: HandshakeIcon, title: "Collaboration", description: "Working together with individuals and agencies to build a better ecosystem." },
+              { icon: Lock, title: "Security", description: "Prioritizing data protection and privacy with state-of-the-art security measures." },
+              { icon: Eye, title: "Transparency", description: "Fostering open communication and clear processes for all stakeholders." },
+              { icon: Handshake, title: "Collaboration", description: "Working together with individuals and agencies to build a better ecosystem." },
             ].map(value => (
               <Card key={value.title} className="bg-slate-800 border-slate-700 p-6">
                 <CardHeader className="items-center">
@@ -95,18 +95,4 @@ export default function AboutPage() {
       </div>
     </div>
   );
-}
-
-// Dummy icons for illustrative purposes, replace with actual Lucide icons if available or SVGs
-function ShieldCheckIcon(props: React.SVGProps<SVGSVGElement>) {
-  return <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" {...props}><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>;
-}
-function LockIcon(props: React.SVGProps<SVGSVGElement>) {
-  return <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" {...props}><rect x={3} y={11} width={18} height={11} rx={2} ry={2} /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>;
-}
-function TransparencyIcon(props: React.SVGProps<SVGSVGElement>) {
-  return <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" {...props}><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx={12} cy={12} r={3} /></svg>;
-}
-function HandshakeIcon(props: React.SVGProps<SVGSVGElement>) {
-    return <svg fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} viewBox="0 0 24 24" {...props}><path d="M🤝"/></svg>; // Placeholder simple emoji
 }
