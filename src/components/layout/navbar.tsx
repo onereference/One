@@ -102,9 +102,7 @@ export function Navbar() {
           <Link href="/features" className="text-base font-medium transition-colors hover:text-primary">
             Features
           </Link>
-           <Link href="/pricing" className="text-base font-medium transition-colors hover:text-primary">
-            Pricing
-          </Link>
+      
           <Link href="/about" className="text-base font-medium transition-colors hover:text-primary">
             About
           </Link>
@@ -162,12 +160,12 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <>
-              <Link href="/user-type-selection">
+              <Link href="/login">
                 <Button variant="ghost" className="text-base">
                   Sign In
                 </Button>
               </Link>
-              <Link href="/user-type-selection">
+              <Link href="/signup">
                 <Button className="text-base">Sign Up</Button>
               </Link>
             </>
