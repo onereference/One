@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useRouter } from "next/navigation";
@@ -6,20 +7,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Building, User } from "lucide-react";
 import { useAuth } from "@/contexts/auth-context";
 import Image from "next/image";
+import { useEffect } from "react";
 
 export default function UserTypeSelectionPage() {
   const router = useRouter();
-  const { setSelectedUserType, isLoggedIn, userType } = useAuth();
+  const { setSelectedUserType, isLoggedIn, userType, onboardingComplete, isLoading } = useAuth();
 
-  if (isLoggedIn && userType) {
-     if (userType === 'agency') router.push('/agency/dashboard');
-     else router.push('/individual/dashboard');
-     return null; // Or a loading spinner
+  useEffect(() => {
+    if (!isLoading && isLoggedIn && userType) {
+      if (!onboardingComplete) {
+        router.push(userType === 'agency' ? '/onboarding/agency' : '/onboarding/individual');
+      } else {
+        router.push(userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard');
+      }
+    }
+  }, [isLoggedIn, userType, onboardingComplete, isLoading, router]);
+
+  if (isLoading || (isLoggedIn && userType)) {
+     return <div className="flex items-center justify-center min-h-screen"><p>Loading...</p></div>;
   }
+
 
   const handleSelection = (type: "agency" | "individual") => {
     setSelectedUserType(type);
-    router.push("/login");
+    router.push("/login"); // Or /signup, but login page handles both cases if not logged in.
   };
 
   return (
@@ -77,3 +88,5 @@ export default function UserTypeSelectionPage() {
     </div>
   );
 }
+
+    
