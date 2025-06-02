@@ -36,12 +36,12 @@ export function HeroSection() {
           </div>
           <div className="relative mt-10 md:mt-0">
             <Image
-              src="https://placehold.co/600x450.png/1A202C/FFFFFF?text=Reference+Process"
-              alt="Reference management process"
+              src="https://placehold.co/600x450.png"
+              alt="Reference management process with professionals"
               width={600}
               height={450}
               className="rounded-lg shadow-2xl"
-              data-ai-hint="professional reference call"
+              data-ai-hint="professional realistic people reference process"
             />
             <div className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 bg-white p-3 rounded-lg shadow-xl text-slate-800 w-52">
                 <p className="text-xs text-slate-500">Notification</p>

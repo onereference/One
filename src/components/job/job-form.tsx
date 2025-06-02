@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,8 +52,10 @@ export function JobForm() {
   });
 
   async function onSubmit(data: JobFormValues) {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // TODO: Implement Firebase call to save job posting data to Firestore
+    // Example: await firebase.firestore().collection('jobs').add(data);
+    
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
     console.log(data);
     toast({
       title: "Job Posted!",

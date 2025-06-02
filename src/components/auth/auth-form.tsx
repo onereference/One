@@ -56,6 +56,11 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    // TODO: Implement actual Firebase Authentication calls here.
+    // For signup: firebase.auth().createUserWithEmailAndPassword(values.email, values.password)
+    // For login: firebase.auth().signInWithEmailAndPassword(values.email, values.password)
+    // Then, on successful Firebase auth, call the context's login/signup.
+    
     await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
 
     if (mode === "signup") {
@@ -89,7 +94,7 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
       title: `Login with ${provider}`,
       description: `Attempting to log in with ${provider}... (Not implemented)`,
     });
-    // In a real app, call Firebase auth methods here
+    // TODO: In a real app, call Firebase auth methods here (e.g., new firebase.auth.GoogleAuthProvider()).
     // For now, simulate login and redirect
     // login(userType, `${provider.toLowerCase()}@example.com`); 
   };
@@ -196,5 +201,3 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
     </div>
   );
 }
-
-    

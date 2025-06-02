@@ -64,7 +64,7 @@ export default function Navbar() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-slate-700">
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src="https://placehold.co/40x40.png/FFA500/FFFFFF?text=U" alt="User avatar" data-ai-hint="person portrait"/>
+                    <AvatarImage src="https://placehold.co/40x40.png" alt="User avatar" data-ai-hint="user avatar realistic person"/>
                     <AvatarFallback className="bg-primary text-primary-foreground">
                       {userType === 'agency' ? <Building className="h-4 w-4" /> : <User className="h-4 w-4" />}
                     </AvatarFallback>

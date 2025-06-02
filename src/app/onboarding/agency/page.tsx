@@ -54,8 +54,16 @@ export default function AgencyOnboardingPage() {
 
   async function onSubmit(values: AgencyOnboardingValues) {
     console.log("Agency Onboarding Data:", values);
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // TODO: Implement Firebase call to save agency data and upload logo to Firebase Storage.
+    // Example:
+    // if (values.agencyLogo) {
+    //   const logoRef = firebase.storage().ref(`agency_logos/${userEmail}-${values.agencyLogo.name}`);
+    //   await logoRef.put(values.agencyLogo);
+    //   values.agencyLogoUrl = await logoRef.getDownloadURL();
+    // }
+    // await firebase.firestore().collection('agencies').doc(userEmail).set(values);
+    
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
     toast({
       title: "Onboarding Complete!",
       description: "Your agency profile has been set up.",
@@ -214,5 +222,3 @@ export default function AgencyOnboardingPage() {
     </Card>
   );
 }
-
-    

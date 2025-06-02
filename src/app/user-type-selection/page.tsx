@@ -54,7 +54,7 @@ export default function UserTypeSelectionPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            <Image src="https://placehold.co/600x400.png" alt="Agency illustration" data-ai-hint="team collaboration" width={600} height={400} className="rounded-md mb-6" />
+            <Image src="https://placehold.co/600x400.png" alt="Agency team working" data-ai-hint="agency team realistic people" width={600} height={400} className="rounded-md mb-6" />
             <Button
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -74,7 +74,7 @@ export default function UserTypeSelectionPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center">
-            <Image src="https://placehold.co/600x400.png" alt="Individual professional" data-ai-hint="professional working" width={600} height={400} className="rounded-md mb-6" />
+            <Image src="https://placehold.co/600x400.png" alt="Individual professional working" data-ai-hint="individual professional realistic person" width={600} height={400} className="rounded-md mb-6" />
             <Button
               size="lg"
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"

@@ -115,7 +115,14 @@ export default function IndividualOnboardingPage() {
 
   async function onSubmit(values: IndividualOnboardingValues) {
     console.log("Individual Onboarding Data:", values);
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    // TODO: Implement Firebase call to save individual user data and upload files (profile pic, CV, certs) to Firebase Storage.
+    // Example:
+    // if (values.profilePicture) { /* upload to storage */ }
+    // if (values.cv) { /* upload to storage */ }
+    // ... etc. for other files
+    // await firebase.firestore().collection('individuals').doc(userEmail).set(values);
+
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
     toast({
       title: "Onboarding Complete!",
       description: "Your profile has been set up.",
@@ -256,5 +263,3 @@ export default function IndividualOnboardingPage() {
     </Card>
   );
 }
-
-    

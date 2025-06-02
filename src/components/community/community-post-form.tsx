@@ -1,3 +1,4 @@
+
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -33,6 +34,10 @@ export function CommunityPostForm({ onSubmitSuccess }: { onSubmitSuccess?: (data
   });
 
   async function onSubmit(data: PostFormValues) {
+    // TODO: Implement Firebase call to save community post data to Firestore.
+    // Associate post with the current logged-in user.
+    // Example: await firebase.firestore().collection('community-posts').add({ ...data, userId: currentUser.uid, createdAt: firebase.firestore.FieldValue.serverTimestamp() });
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     console.log(data);

@@ -21,7 +21,7 @@ export default function AboutPage() {
             width={800} 
             height={400} 
             className="rounded-lg shadow-xl mx-auto"
-            data-ai-hint="team collaboration office"
+            data-ai-hint="diverse team realistic people"
           />
         </section>
 

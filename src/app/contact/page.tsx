@@ -45,6 +45,9 @@ export default function ContactPage() {
 
   async function onSubmit(values: ContactFormValues) {
     console.log("Contact Form Data:", values);
+    // TODO: Implement Firebase call (e.g., save to a 'contact-messages' collection in Firestore)
+    // or send an email via a Firebase Function.
+    
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     toast({

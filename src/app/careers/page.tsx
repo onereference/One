@@ -40,12 +40,12 @@ export default function CareersPage() {
             We're building the future of reference management and looking for passionate, talented individuals to help us on our mission.
           </p>
           <Image 
-            src="https://placehold.co/800x350.png/1A202C/FFA500?text=Team+OneReference" 
+            src="https://placehold.co/800x350.png" 
             alt="Happy and diverse team working together" 
             width={800} 
             height={350} 
             className="rounded-lg shadow-xl mx-auto"
-            data-ai-hint="diverse team working"
+            data-ai-hint="diverse team realistic people working"
           />
         </section>
 
