@@ -124,7 +124,7 @@ export function PageFooter() { // Renamed from Footer to PageFooter for consiste
                 </Link>
               </li>
               <li>
-                <Link href="/user-type-selection" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/signup" className="text-muted-foreground hover:text-primary transition-colors">
                   Create Account
                 </Link>
               </li>

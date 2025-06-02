@@ -24,7 +24,7 @@ export default function Hero() {
               manage, verify, and share professional references.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/">
+              <Link href="/signup">
                 <Button size="lg" className="w-full sm:w-auto">
                   Get Started
                 </Button>
@@ -59,7 +59,7 @@ export default function Hero() {
             <div className="hidden md:block absolute top-0 right-0 md:right-12 bg-background rounded-lg p-2 shadow-md z-10">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                  <Image src="/abstract-profile.png" alt="Designer" width={30} height={30} className="rounded-full" />
+                  <Image src="/bman.png" alt="Designer" width={30} height={30} className="rounded-full" />
                 </div>
                 <div>
                   <p className="text-xs font-medium">Good Doctor</p>
@@ -78,7 +78,7 @@ export default function Hero() {
             <div className="hidden md:block absolute bottom-12 left-0 md:-left-6 bg-background rounded-lg p-3 shadow-md z-10">
               <div className="flex items-start gap-3">
                 <div className="w-8 h-8 bg-primary/20 rounded-md flex items-center justify-center">
-                  <div className="w-4 h-4 bg-primary rounded-sm"></div>
+                <Image src="/nurseman.png" alt="Designer" width={30} height={30} className="rounded-full" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Notification</p>
@@ -94,7 +94,7 @@ export default function Hero() {
             {/* User Profile Tag */}
             <div className="absolute bottom-24 right-4 md:right-0 bg-background rounded-full pl-2 pr-4 py-1 shadow-md flex items-center gap-2 z-10">
               <div className="w-8 h-8 bg-[#ffd280] rounded-full flex items-center justify-center">
-                <Image src="/placeholder.svg?key=oa4h6" alt="Gavin" width={30} height={30} className="rounded-full" />
+                <Image src="/man.png" alt="Gavin" width={30} height={30} className="rounded-full" />
               </div>
               <div>
                 <p className="text-xs text-gray-500 font-medium">Gavin Henry</p>

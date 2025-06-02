@@ -234,13 +234,7 @@ export function Navbar() {
             >
               Features
             </Link>
-            <Link
-              href="/pricing"
-              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Pricing
-            </Link>
+            
             <Link
               href="/about"
               className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
@@ -259,14 +253,14 @@ export function Navbar() {
             {showAuthContent && !auth.isLoggedIn && (
               <>
                 <Link
-                  href="/user-type-selection"
+                  href="/signin"
                   className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/user-type-selection"
+                  href="/signup"
                   className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
                   onClick={() => setIsMenuOpen(false)}
                 >
