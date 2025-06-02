@@ -38,7 +38,7 @@ export function PageFooter() { // Renamed from Footer to PageFooter for consiste
           <div className="col-span-2 md:col-span-1 lg:col-span-2">
             <Link href="/" className="flex items-center space-x-2">
               <div className="relative h-10 w-10">
-                <Image src="https://placehold.co/40x40.png" data-ai-hint="logo" alt="OneReference Logo" fill sizes="40px" className="object-contain" />
+                <Image src="/images/logo.png" data-ai-hint="logo" alt="OneReference Logo" fill sizes="40px" className="object-contain" />
               </div>
               <span className="text-xl font-bold">OneReference</span>
             </Link>
@@ -119,7 +119,7 @@ export function PageFooter() { // Renamed from Footer to PageFooter for consiste
                 </Link>
               </li>
               <li>
-                <Link href="/individual-pricing" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/pricing" className="text-muted-foreground hover:text-primary transition-colors">
                   Pricing
                 </Link>
               </li>
@@ -146,7 +146,7 @@ export function PageFooter() { // Renamed from Footer to PageFooter for consiste
                 </Link>
               </li>
               <li>
-                <Link href="/agency-pricing" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/pricing#agency" className="text-muted-foreground hover:text-primary transition-colors">
                   Agency Pricing
                 </Link>
               </li>

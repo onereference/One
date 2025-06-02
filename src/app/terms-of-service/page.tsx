@@ -1,68 +1,310 @@
+import type { Metadata } from "next"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Mail, Phone, MapPin } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Terms of Service - OneReference",
+  description: "Read the terms and conditions governing the use of OneReference services.",
+}
 
 export default function TermsOfServicePage() {
   return (
-    <div className="bg-slate-900 text-white min-h-screen py-12 md:py-16">
-      <div className="container mx-auto px-4 max-w-3xl">
-        <article className="prose prose-invert prose-lg lg:prose-xl prose-headings:text-primary prose-a:text-primary hover:prose-a:text-primary/80">
-          <h1>Terms of Service</h1>
-          <p className="lead text-slate-300">Last updated: {new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+    <>
+   
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-primary/20 to-background">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <h1 className="text-3xl font-serif font-bold tracking-tighter sm:text-5xl md:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
+                Terms of Service
+              </h1>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                Last updated:{" "}
+                <span className="font-medium text-foreground">
+                  {new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+                </span>
+              </p>
+            </div>
+          </div>
+        </section>
 
-          <p>Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the OneReference website (the "Service") operated by OneReference ("us", "we", or "our").</p>
-          <p>Your access to and use of the Service is conditioned on your acceptance of and compliance with these Terms. These Terms apply to all visitors, users and others who access or use the Service.</p>
-          <p>By accessing or using the Service you agree to be bound by these Terms. If you disagree with any part of the terms then you may not access the Service.</p>
+        <section className="w-full py-12 md:py-24 bg-muted/30">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="prose prose-lg dark:prose-invert max-w-4xl mx-auto">
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    1. Agreement to Terms
+                  </h2>
+                  <p>
+                    These Terms of Service ("Terms") constitute a legally binding agreement between you and OneReference
+                    ("we," "us," or "our") governing your access to and use of the OneReference website, applications,
+                    and services (collectively, the "Services").
+                  </p>
+                  <p>
+                    By accessing or using our Services, you agree to be bound by these Terms. If you do not agree to
+                    these Terms, you may not access or use the Services.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>Accounts</h2>
-          <p>When you create an account with us, you must provide us information that is accurate, complete, and current at all times. Failure to do so constitutes a breach of the Terms, which may result in immediate termination of your account on our Service.</p>
-          <p>You are responsible for safeguarding the password that you use to access the Service and for any activities or actions under your password, whether your password is with our Service or a third-party service.</p>
-          <p>You agree not to disclose your password to any third party. You must notify us immediately upon becoming aware of any breach of security or unauthorized use of your account.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    2. Changes to Terms
+                  </h2>
+                  <p>
+                    We may modify these Terms at any time. If we make changes, we will provide notice by posting the
+                    updated Terms on our website and updating the "Last updated" date. Your continued use of the
+                    Services after the posting of modified Terms constitutes your acceptance of the changes.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>Intellectual Property</h2>
-          <p>The Service and its original content, features and functionality are and will remain the exclusive property of OneReference and its licensors. The Service is protected by copyright, trademark, and other laws of both the United Kingdom and foreign countries. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of OneReference.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">3. Eligibility</h2>
+                  <p>
+                    You must be at least 18 years old to use our Services. By using our Services, you represent and
+                    warrant that you meet this requirement and that you have the right, authority, and capacity to enter
+                    into these Terms.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>User Content</h2>
-          <p>Our Service allows you to post, link, store, share and otherwise make available certain information, text, graphics, videos, or other material ("User Content"). You are responsible for the User Content that you post to the Service, including its legality, reliability, and appropriateness.</p>
-          <p>By posting User Content to the Service, you grant us the right and license to use, modify, publicly perform, publicly display, reproduce, and distribute such User Content on and through the Service. You retain any and all of your rights to any User Content you submit, post or display on or through the Service and you are responsible for protecting those rights. You agree that this license includes the right for us to make your User Content available to other users of the Service, who may also use your User Content subject to these Terms.</p>
-          <p>You represent and warrant that: (i) the User Content is yours (you own it) or you have the right to use it and grant us the rights and license as provided in these Terms, and (ii) the posting of your User Content on or through the Service does not violate the privacy rights, publicity rights, copyrights, contract rights or any other rights of any person.</p>
-          <p>Specifically for reference information, by providing reference details or authorizing us to contact your references, you confirm you have obtained necessary consents from your referees for us to contact them and collect their feedback.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    4. Account Registration
+                  </h2>
+                  <p>
+                    To access certain features of our Services, you may need to register for an account. You agree to
+                    provide accurate, current, and complete information during the registration process and to update
+                    such information to keep it accurate, current, and complete.
+                  </p>
+                  <p>
+                    You are responsible for safeguarding your account credentials and for all activities that occur
+                    under your account. You agree to notify us immediately of any unauthorized use of your account.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>Prohibited Uses</h2>
-          <p>You may use the Service only for lawful purposes and in accordance with Terms. You agree not to use the Service:</p>
-          <ul>
-            <li>In any way that violates any applicable national or international law or regulation.</li>
-            <li>For the purpose of exploiting, harming, or attempting to exploit or harm minors in any way by exposing them to inappropriate content or otherwise.</li>
-            <li>To transmit, or procure the sending of, any advertising or promotional material, including any "junk mail", "chain letter," "spam," or any other similar solicitation.</li>
-            <li>To impersonate or attempt to impersonate OneReference, a OneReference employee, another user, or any other person or entity.</li>
-            <li>In any way that infringes upon the rights of others, or in any way is illegal, threatening, fraudulent, or harmful, or in connection with any unlawful, illegal, fraudulent, or harmful purpose or activity.</li>
-            <li>To engage in any other conduct that restricts or inhibits anyone's use or enjoyment of the Service, or which, as determined by us, may harm or offend OneReference or users of the Service or expose them to liability.</li>
-          </ul>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">5. User Content</h2>
+                  <p>
+                    Our Services allow you to create, upload, store, and share content, including text, images, and
+                    other materials ("User Content"). You retain all rights in your User Content, but you grant us a
+                    non-exclusive, transferable, sub-licensable, royalty-free, worldwide license to use, copy, modify,
+                    create derivative works based on, distribute, publicly display, and publicly perform your User
+                    Content in connection with operating and providing our Services.
+                  </p>
+                  <div className="bg-background rounded-lg p-6 my-4 border border-border">
+                    <p className="font-medium">You represent and warrant that:</p>
+                    <ul className="list-disc pl-6 space-y-2 mt-2">
+                      <li className="marker:text-primary">
+                        You own or have the necessary rights to your User Content and the right to grant the license
+                        above.
+                      </li>
+                      <li className="marker:text-primary">
+                        Your User Content does not violate these Terms, applicable law, or the rights of any third
+                        party.
+                      </li>
+                      <li className="marker:text-primary">Your User Content is accurate and not misleading.</li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <h2>Termination</h2>
-          <p>We may terminate or suspend your account immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</p>
-          <p>Upon termination, your right to use the Service will immediately cease. If you wish to terminate your account, you may simply discontinue using the Service or contact us to request account deletion.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    6. Prohibited Conduct
+                  </h2>
+                  <p>You agree not to:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>
+                        Use the Services in any manner that could interfere with, disrupt, negatively affect, or inhibit
+                        other users from fully enjoying the Services.
+                      </div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>
+                        Use the Services in any way that could damage, disable, overburden, or impair the functioning of
+                        the Services.
+                      </div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>
+                        Attempt to circumvent any filtering, security measures, or other features designed to protect
+                        the Services or third parties.
+                      </div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>
+                        Upload or transmit any viruses, malicious code, or other software that might harm the Services
+                        or other users.
+                      </div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>Collect or store personal information about other users without their consent.</div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>
+                        Impersonate any person or entity or falsely state or misrepresent your affiliation with a person
+                        or entity.
+                      </div>
+                    </div>
+                    <div className="bg-background p-3 rounded-md border border-border flex items-start">
+                      <div className="mr-2 mt-1 text-primary">•</div>
+                      <div>Violate any applicable law or regulation.</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <h2>Limitation Of Liability</h2>
-          <p>In no event shall OneReference, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from (i) your access to or use of or inability to access or use the Service; (ii) any conduct or content of any third party on the Service; (iii) any content obtained from the Service; and (iv) unauthorized access, use or alteration of your transmissions or content, whether based on warranty, contract, tort (including negligence) or any other legal theory, whether or not we have been informed of the possibility of such damage, and even if a remedy set forth herein is found to have failed of its essential purpose.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    7. Reference Information
+                  </h2>
+                  <p>Our Services allow you to provide and manage reference information. You agree that:</p>
+                  <div className="bg-background rounded-lg p-6 my-4 border border-border">
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <div className="bg-primary/10 text-primary font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">
+                          1
+                        </div>
+                        <div>You have obtained proper consent from your references to provide their information.</div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="bg-primary/10 text-primary font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">
+                          2
+                        </div>
+                        <div>The reference information you provide is accurate and not misleading.</div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="bg-primary/10 text-primary font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">
+                          3
+                        </div>
+                        <div>You will not use our Services to provide false or fraudulent reference information.</div>
+                      </li>
+                      <li className="flex items-start">
+                        <div className="bg-primary/10 text-primary font-bold rounded-full w-6 h-6 flex items-center justify-center mr-3 mt-0.5">
+                          4
+                        </div>
+                        <div>You will respect the privacy and rights of your references.</div>
+                      </li>
+                    </ul>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <h2>Disclaimer</h2>
-          <p>Your use of the Service is at your sole risk. The Service is provided on an "AS IS" and "AS AVAILABLE" basis. The Service is provided without warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, non-infringement or course of performance.</p>
-          <p>OneReference its subsidiaries, affiliates, and its licensors do not warrant that a) the Service will function uninterrupted, secure or available at any particular time or location; b) any errors or defects will be corrected; c) the Service is free of viruses or other harmful components; or d) the results of using the Service will meet your requirements.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    8. Intellectual Property Rights
+                  </h2>
+                  <p>
+                    The Services and their contents, features, and functionality are owned by OneReference and are
+                    protected by copyright, trademark, and other intellectual property laws. You may not use, reproduce,
+                    distribute, modify, create derivative works of, publicly display, or publicly perform any of the
+                    content of the Services without our prior written consent.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>Governing Law</h2>
-          <p>These Terms shall be governed and construed in accordance with the laws of the United Kingdom, without regard to its conflict of law provisions.</p>
-          <p>Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights. If any provision of these Terms is held to be invalid or unenforceable by a court, the remaining provisions of these Terms will remain in effect. These Terms constitute the entire agreement between us regarding our Service, and supersede and replace any prior agreements we might have between us regarding the Service.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">9. Termination</h2>
+                  <p>
+                    We may terminate or suspend your access to the Services immediately, without prior notice or
+                    liability, for any reason, including if you breach these Terms. Upon termination, your right to use
+                    the Services will immediately cease.
+                  </p>
+                </CardContent>
+              </Card>
 
-          <h2>Changes</h2>
-          <p>We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.</p>
-          <p>By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.</p>
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    10. Disclaimer of Warranties
+                  </h2>
+                  <div className="bg-background rounded-lg p-6 my-4 border border-border">
+                    <p className="font-bold uppercase text-center">
+                      THE SERVICES ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER
+                      EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS
+                      FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
 
-          <h2>Contact Us</h2>
-          <p>If you have any questions about these Terms, please contact us:</p>
-          <ul>
-            <li>By email: legal@onereference.com</li>
-            <li>By visiting this page on our website: <a href="/contact">Contact Page</a></li>
-          </ul>
-        </article>
-      </div>
-    </div>
-  );
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    11. Limitation of Liability
+                  </h2>
+                  <div className="bg-background rounded-lg p-6 my-4 border border-border">
+                    <p className="font-bold uppercase text-center">
+                      IN NO EVENT SHALL ONEREFERENCE BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR
+                      PUNITIVE DAMAGES, INCLUDING WITHOUT LIMITATION, LOSS OF PROFITS, DATA, USE, GOODWILL, OR OTHER
+                      INTANGIBLE LOSSES, RESULTING FROM YOUR ACCESS TO OR USE OF OR INABILITY TO ACCESS OR USE THE
+                      SERVICES.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="mb-10 border-primary/20 shadow-lg">
+                <CardContent className="p-6 md:p-8">
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-4 border-b pb-2">
+                    16. Contact Information
+                  </h2>
+                  <p>If you have any questions about these Terms, please contact us at:</p>
+                  <div className="bg-background rounded-lg p-6 my-4 border border-border">
+                    <div className="flex items-start space-x-3 mb-3">
+                      <Mail className="h-5 w-5 text-primary mt-0.5" />
+                      <p>
+                        <span className="font-medium">Email:</span> legal@onereference.com
+                      </p>
+                    </div>
+                    <div className="flex items-start space-x-3 mb-3">
+                      <Phone className="h-5 w-5 text-primary mt-0.5" />
+                      <p>
+                        <span className="font-medium">Phone:</span> +44 (20) 1234 5678
+                      </p>
+                    </div>
+                    <div className="flex items-start space-x-3">
+                      <MapPin className="h-5 w-5 text-primary mt-0.5" />
+                      <p>
+                        <span className="font-medium">Address:</span>
+                        <br />
+                        OneReference Ltd.
+                        <br />
+                        123 Reference Way
+                        <br />
+                        London, EC1A 1BB
+                        <br />
+                        United Kingdom
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </main>
+    
+    </>
+  )
 }

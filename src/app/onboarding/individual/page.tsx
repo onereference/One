@@ -20,11 +20,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 import { UserCircle, UploadCloud, Globe, Phone, Tag, Info, Briefcase, FileText, Linkedin, Link as LinkIcon } from "lucide-react";
 import { useState, useEffect } from "react";
+import { db, storage } from '@/lib/firebase';
+import { doc, setDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const individualOnboardingSchema = z.object({
-  // Personal Information
   country: z.string().min(1, "Country is required."),
   city: z.string().min(1, "City is required."),
   firstName: z.string().min(1, "First name is required."),
@@ -36,67 +39,58 @@ const individualOnboardingSchema = z.object({
   gmcNumber: z.string().optional(),
   nmcNumber: z.string().optional(),
   phoneNumber: z.string().min(5, "Phone number is required.").optional(),
-
-  // Professional Details
   linkedinUrl: z.string().url("Invalid LinkedIn URL.").optional().or(z.literal("")),
   portfolioWebsite: z.string().url("Invalid portfolio URL.").optional().or(z.literal("")),
-  professionalTitles: z.string().optional(), // Comma-separated tags
+  professionalTitles: z.string().optional(),
   professionalBio: z.string().min(10, "Bio must be at least 10 characters.").max(1000, "Bio too long.").optional(),
-
-  // Document Uploads
   cv: z.any().optional(),
-  certifications: z.any().optional(),
-  referenceLetters: z.any().optional(),
+  certifications: z.any().optional(), // Allow multiple files
+  referenceLetters: z.any().optional(), // Allow multiple files
   criminalRecordChecks: z.any().optional(),
 }).superRefine((data, ctx) => {
     if (data.workEmail && data.workEmail.toLowerCase().includes("@nhs")) {
         if (!data.nhsProfession) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "Please select your profession (Doctor or Nurse).",
-                path: ["nhsProfession"],
-            });
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Please select your profession (Doctor or Nurse).", path: ["nhsProfession"] });
         } else if (data.nhsProfession === "Doctor" && !data.gmcNumber) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "GMC Number is required for Doctors.",
-                path: ["gmcNumber"],
-            });
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "GMC Number is required for Doctors.", path: ["gmcNumber"] });
         } else if (data.nhsProfession === "Nurse" && !data.nmcNumber) {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: "NMC Number is required for Nurses.",
-                path: ["nmcNumber"],
-            });
+            ctx.addIssue({ code: z.ZodIssueCode.custom, message: "NMC Number is required for Nurses.", path: ["nmcNumber"] });
         }
     }
 });
 
-
 type IndividualOnboardingValues = z.infer<typeof individualOnboardingSchema>;
 
+// Helper function to upload a single file
+const uploadFile = async (file: File, path: string): Promise<string> => {
+  const fileRef = ref(storage, path);
+  await uploadBytes(fileRef, file);
+  return getDownloadURL(fileRef);
+};
+
+// Helper function to upload multiple files
+const uploadMultipleFiles = async (files: FileList, basePath: string): Promise<string[]> => {
+  const uploadPromises = Array.from(files).map(file => {
+    const filePath = `${basePath}/${file.name}`;
+    return uploadFile(file, filePath);
+  });
+  return Promise.all(uploadPromises);
+};
+
+
 export default function IndividualOnboardingPage() {
-  const { completeOnboarding, userEmail } = useAuth();
+  const { currentUser, completeOnboarding, userProfile } = useAuth();
   const { toast } = useToast();
+  const router = useRouter();
   const [isNhsEmail, setIsNhsEmail] = useState(false);
   
   const form = useForm<IndividualOnboardingValues>({
     resolver: zodResolver(individualOnboardingSchema),
     defaultValues: {
-      country: "",
-      city: "",
-      firstName: "",
-      middleName: "",
-      surname: "",
-      workEmail: userEmail || "",
-      phoneNumber: "",
-      linkedinUrl: "",
-      portfolioWebsite: "",
-      professionalTitles: "",
-      professionalBio: "",
-      nhsProfession: "",
-      gmcNumber: "",
-      nmcNumber: "",
+      country: "", city: "", firstName: "", middleName: "", surname: "",
+      workEmail: currentUser?.email || "", phoneNumber: "", linkedinUrl: "",
+      portfolioWebsite: "", professionalTitles: "", professionalBio: "",
+      nhsProfession: "", gmcNumber: "", nmcNumber: "",
     },
   });
 
@@ -104,42 +98,94 @@ export default function IndividualOnboardingPage() {
   const nhsProfessionValue = form.watch("nhsProfession");
 
   useEffect(() => {
-    setIsNhsEmail(workEmailValue.toLowerCase().includes("@nhs"));
-    if (!workEmailValue.toLowerCase().includes("@nhs")) {
+    setIsNhsEmail(workEmailValue?.toLowerCase().includes("@nhs") || false);
+    if (!workEmailValue?.toLowerCase().includes("@nhs")) {
         form.setValue("nhsProfession", "");
         form.setValue("gmcNumber", "");
         form.setValue("nmcNumber", "");
     }
   }, [workEmailValue, form]);
 
-
   async function onSubmit(values: IndividualOnboardingValues) {
-    console.log("Individual Onboarding Data:", values);
-    // TODO: Implement Firebase call to save individual user data and upload files (profile pic, CV, certs) to Firebase Storage.
-    // Example:
-    // if (values.profilePicture) { /* upload to storage */ }
-    // if (values.cv) { /* upload to storage */ }
-    // ... etc. for other files
-    // await firebase.firestore().collection('individuals').doc(userEmail).set(values);
+    if (!currentUser) {
+      toast({ title: "Error", description: "You must be logged in.", variant: "destructive" });
+      router.push('/login');
+      return;
+    }
+    form.formState.isSubmitting = true;
 
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-    toast({
-      title: "Onboarding Complete!",
-      description: "Your profile has been set up.",
-    });
-    completeOnboarding();
+    try {
+      const individualData: Partial<IndividualOnboardingValues & { 
+        profilePictureUrl?: string, 
+        cvUrl?: string, 
+        certificationUrls?: string[],
+        referenceLetterUrls?: string[],
+        criminalRecordCheckUrl?: string,
+        userId?: string 
+      }> = { ...values };
+
+      if (values.profilePicture && values.profilePicture instanceof File) {
+        individualData.profilePictureUrl = await uploadFile(values.profilePicture, `profile_pictures/${currentUser.uid}/${values.profilePicture.name}`);
+      }
+      if (values.cv && values.cv instanceof File) {
+        individualData.cvUrl = await uploadFile(values.cv, `cvs/${currentUser.uid}/${values.cv.name}`);
+      }
+      if (values.certifications && values.certifications instanceof FileList && values.certifications.length > 0) {
+        individualData.certificationUrls = await uploadMultipleFiles(values.certifications, `certifications/${currentUser.uid}`);
+      }
+      if (values.referenceLetters && values.referenceLetters instanceof FileList && values.referenceLetters.length > 0) {
+        individualData.referenceLetterUrls = await uploadMultipleFiles(values.referenceLetters, `reference_letters/${currentUser.uid}`);
+      }
+      if (values.criminalRecordChecks && values.criminalRecordChecks instanceof File) {
+        individualData.criminalRecordCheckUrl = await uploadFile(values.criminalRecordChecks, `criminal_record_checks/${currentUser.uid}/${values.criminalRecordChecks.name}`);
+      }
+      
+      // Remove file objects before saving to Firestore
+      delete individualData.profilePicture;
+      delete individualData.cv;
+      delete individualData.certifications;
+      delete individualData.referenceLetters;
+      delete individualData.criminalRecordChecks;
+      
+      individualData.userId = currentUser.uid;
+
+      const individualDocRef = doc(db, 'individuals', currentUser.uid);
+      await setDoc(individualDocRef, individualData, { merge: true });
+      
+      await completeOnboarding();
+
+      toast({
+        title: "Onboarding Complete!",
+        description: "Your profile has been set up.",
+      });
+    } catch (error: any) {
+      console.error("Individual Onboarding Error:", error);
+      toast({ title: "Onboarding Failed", description: error.message || "Could not save profile details.", variant: "destructive" });
+    } finally {
+        form.formState.isSubmitting = false;
+    }
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+     if (!currentUser) {
+        toast({ title: "Error", description: "You must be logged in to skip.", variant: "destructive" });
+        router.push('/login');
+        return;
+    }
     toast({
       title: "Onboarding Skipped",
       description: "You can complete your profile later from settings.",
       variant: "default"
     });
-    completeOnboarding();
+    await completeOnboarding();
   };
 
-  const countries = ["United Kingdom", "United States", "Canada", "Australia", "Germany", "India"]; // Placeholder
+  const countries = ["United Kingdom", "United States", "Canada", "Australia", "Germany", "India"]; 
+
+  if (!userProfile || userProfile.userType !== 'individual') {
+    if (!currentUser && !useAuth().isLoading) router.push('/login');
+    return <div className="flex items-center justify-center h-screen"><p>Loading or redirecting...</p></div>;
+  }
 
   return (
     <Card className="w-full">
@@ -152,7 +198,6 @@ export default function IndividualOnboardingPage() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             
-            {/* Personal Information Section */}
             <section className="space-y-4 p-4 border rounded-md">
               <h3 className="text-lg font-semibold text-primary flex items-center"><Info className="mr-2 h-5 w-5"/>Personal Information</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -175,9 +220,9 @@ export default function IndividualOnboardingPage() {
                 <FormField control={form.control} name="city" render={({ field }) => (
                     <FormItem><FormLabel>City</FormLabel><FormControl><Input placeholder="London" {...field} /></FormControl><FormMessage /></FormItem>
                 )}/>
-                 <FormField control={form.control} name="profilePicture" render={({ field }) => (
+                 <FormField control={form.control} name="profilePicture" render={({ field: { onChange, value, ...rest }}) => ( // Destructure to handle file input correctly
                     <FormItem><FormLabel className="flex items-center"><UploadCloud className="mr-2 h-4 w-4"/>Profile Picture</FormLabel>
-                    <FormControl><Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)}/></FormControl>
+                    <FormControl><Input type="file" accept="image/*" onChange={(e) => onChange(e.target.files ? e.target.files[0] : null)} {...rest} /></FormControl>
                     <FormDescription>Upload a professional headshot.</FormDescription><FormMessage /></FormItem>
                 )}/>
               </div>
@@ -212,7 +257,6 @@ export default function IndividualOnboardingPage() {
               )}/>
             </section>
 
-            {/* Professional Details Section */}
             <section className="space-y-4 p-4 border rounded-md">
               <h3 className="text-lg font-semibold text-primary flex items-center"><Briefcase className="mr-2 h-5 w-5"/>Professional Details</h3>
               <FormField control={form.control} name="linkedinUrl" render={({ field }) => (
@@ -232,20 +276,19 @@ export default function IndividualOnboardingPage() {
               )}/>
             </section>
 
-            {/* Document Uploads Section */}
             <section className="space-y-4 p-4 border rounded-md">
               <h3 className="text-lg font-semibold text-primary flex items-center"><FileText className="mr-2 h-5 w-5"/>Document Uploads</h3>
-              <FormField control={form.control} name="cv" render={({ field }) => (
-                <FormItem><FormLabel>CV/Resume</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)} /></FormControl><FormMessage /></FormItem>
+              <FormField control={form.control} name="cv" render={({ field: { onChange, value, ...rest }}) => (
+                <FormItem><FormLabel>CV/Resume</FormLabel><FormControl><Input type="file" accept=".pdf,.doc,.docx" onChange={(e) => onChange(e.target.files ? e.target.files[0] : null)} {...rest} /></FormControl><FormMessage /></FormItem>
               )}/>
-              <FormField control={form.control} name="certifications" render={({ field }) => (
-                <FormItem><FormLabel>Certifications (Optional)</FormLabel><FormControl><Input type="file" multiple accept=".pdf,.jpg,.png" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+              <FormField control={form.control} name="certifications" render={({ field: { onChange, value, ...rest }}) => (
+                <FormItem><FormLabel>Certifications (Optional)</FormLabel><FormControl><Input type="file" multiple accept=".pdf,.jpg,.png" onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl><FormMessage /></FormItem>
               )}/>
-               <FormField control={form.control} name="referenceLetters" render={({ field }) => (
-                <FormItem><FormLabel>Reference Letters (Optional)</FormLabel><FormControl><Input type="file" multiple accept=".pdf,.doc,.docx" onChange={(e) => field.onChange(e.target.files)} /></FormControl><FormMessage /></FormItem>
+               <FormField control={form.control} name="referenceLetters" render={({ field: { onChange, value, ...rest }}) => (
+                <FormItem><FormLabel>Reference Letters (Optional)</FormLabel><FormControl><Input type="file" multiple accept=".pdf,.doc,.docx" onChange={(e) => onChange(e.target.files)} {...rest} /></FormControl><FormMessage /></FormItem>
               )}/>
-              <FormField control={form.control} name="criminalRecordChecks" render={({ field }) => (
-                <FormItem><FormLabel>Criminal Record Checks (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf" onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)} /></FormControl><FormMessage /></FormItem>
+              <FormField control={form.control} name="criminalRecordChecks" render={({ field: { onChange, value, ...rest }}) => (
+                <FormItem><FormLabel>Criminal Record Checks (Optional)</FormLabel><FormControl><Input type="file" accept=".pdf" onChange={(e) => onChange(e.target.files ? e.target.files[0] : null)} {...rest} /></FormControl><FormMessage /></FormItem>
               )}/>
             </section>
 
@@ -253,7 +296,7 @@ export default function IndividualOnboardingPage() {
               <Button type="submit" className="w-full sm:w-auto" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Saving..." : "Save & Continue"}
               </Button>
-              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={handleSkip}>
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={handleSkip} disabled={form.formState.isSubmitting}>
                 Skip for Now
               </Button>
             </div>

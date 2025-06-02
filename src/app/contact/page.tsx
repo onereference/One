@@ -19,6 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Send } from "lucide-react";
+import type { Metadata } from "next"
 
 const contactFormSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
@@ -58,83 +59,131 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="bg-slate-900 text-white min-h-screen py-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold font-headline mb-4 text-primary">Contact Us</h1>
-          <p className="text-xl text-slate-300 max-w-2xl mx-auto">
-            Have questions or want to learn more? We'd love to hear from you.
+    <main className="flex-1">
+    {/* Hero Section */}
+    <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-radial from-primary/10 to-background">
+      <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center space-y-4">
+          <h1 className="text-3xl font-serif font-bold tracking-tighter sm:text-4xl md:text-5xl">Contact Us</h1>
+          <p className="max-w-[700px] text-muted-foreground md:text-xl">
+            Have questions or need assistance? We're here to help.
           </p>
         </div>
+      </div>
+    </section>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          {/* Contact Form */}
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-2xl text-white flex items-center"><Send className="mr-2 h-6 w-6 text-primary"/>Send Us a Message</CardTitle>
-              <CardDescription className="text-slate-400">Fill out the form and we'll get in touch.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <FormField control={form.control} name="name" render={({ field }) => (
-                    <FormItem><FormLabel>Full Name</FormLabel><FormControl><Input placeholder="Your Name" {...field} className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400" /></FormControl><FormMessage /></FormItem>
-                  )}/>
-                  <FormField control={form.control} name="email" render={({ field }) => (
-                    <FormItem><FormLabel>Email Address</FormLabel><FormControl><Input type="email" placeholder="you@example.com" {...field} className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400" /></FormControl><FormMessage /></FormItem>
-                  )}/>
-                  <FormField control={form.control} name="inquiryType" render={({ field }) => (
-                    <FormItem><FormLabel>Inquiry Type</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl><SelectTrigger className="bg-slate-700 border-slate-600 text-white"><SelectValue placeholder="Select inquiry type" /></SelectTrigger></FormControl>
-                        <SelectContent className="bg-slate-800 border-slate-700 text-white">
-                          <SelectItem value="general" className="hover:!bg-slate-700 focus:!bg-slate-700">General Inquiry</SelectItem>
-                          <SelectItem value="support" className="hover:!bg-slate-700 focus:!bg-slate-700">Technical Support</SelectItem>
-                          <SelectItem value="sales" className="hover:!bg-slate-700 focus:!bg-slate-700">Sales & Demo</SelectItem>
-                          <SelectItem value="partnership" className="hover:!bg-slate-700 focus:!bg-slate-700">Partnerships</SelectItem>
-                        </SelectContent>
-                      </Select><FormMessage /></FormItem>
-                  )}/>
-                  <FormField control={form.control} name="subject" render={({ field }) => (
-                    <FormItem><FormLabel>Subject</FormLabel><FormControl><Input placeholder="Regarding..." {...field} className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400" /></FormControl><FormMessage /></FormItem>
-                  )}/>
-                  <FormField control={form.control} name="message" render={({ field }) => (
-                    <FormItem><FormLabel>Message</FormLabel><FormControl><Textarea placeholder="Your message here..." {...field} className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 min-h-[120px]" /></FormControl><FormMessage /></FormItem>
-                  )}/>
-                  <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground" disabled={form.formState.isSubmitting}>
-                    {form.formState.isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <Card className="bg-slate-800 border-slate-700 p-6">
-              <CardTitle className="text-xl text-white mb-4">Our Office</CardTitle>
-              <div className="space-y-2 text-slate-300">
-                <p className="flex items-center"><MapPin className="w-5 h-5 mr-3 text-primary" /> 123 New Kings Road, London, SW6 4LZ, United Kingdom</p>
+    {/* Contact Form Section */}
+    <section className="w-full py-12 md:py-24">
+      <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-6 lg:grid-cols-2 lg:gap-12">
+          <div className="space-y-4">
+            <h2 className="text-3xl font-serif font-bold tracking-tighter">Get in Touch</h2>
+            <p className="text-muted-foreground">
+              Fill out the form below and our team will get back to you as soon as possible.
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-start space-x-4">
+                <Mail className="h-6 w-6 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-bold">Email</h3>
+                  <p className="text-muted-foreground">info@onereference.com</p>
+                </div>
               </div>
-            </Card>
-            <Card className="bg-slate-800 border-slate-700 p-6">
-              <CardTitle className="text-xl text-white mb-4">Email Us</CardTitle>
-              <div className="space-y-2 text-slate-300">
-                <p className="flex items-center"><Mail className="w-5 h-5 mr-3 text-primary" /> General: info@onereference.com</p>
-                <p className="flex items-center"><Mail className="w-5 h-5 mr-3 text-primary" /> Support: support@onereference.com</p>
-                <p className="flex items-center"><Mail className="w-5 h-5 mr-3 text-primary" /> Sales: sales@onereference.com</p>
+              <div className="flex items-start space-x-4">
+                <Phone className="h-6 w-6 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-bold">Phone</h3>
+                  <p className="text-muted-foreground">+44 12 3456 7890</p>
+                </div>
               </div>
-            </Card>
-             <Card className="bg-slate-800 border-slate-700 p-6">
-              <CardTitle className="text-xl text-white mb-4">Call Us</CardTitle>
-              <div className="space-y-2 text-slate-300">
-                <p className="flex items-center"><Phone className="w-5 h-5 mr-3 text-primary" /> Main Line: +44 12 3456 7890</p>
-                <p className="flex items-center"><Phone className="w-5 h-5 mr-3 text-primary" /> Sales: +44 12 3456 7891</p>
+              <div className="flex items-start space-x-4">
+                <MapPin className="h-6 w-6 text-primary mt-0.5" />
+                <div>
+                  <h3 className="font-bold">Address</h3>
+                  <p className="text-muted-foreground">
+                    123 New Kings Road
+                    <br />
+                    London, SW6 4LZ03
+                    <br />
+                    United Kingdom
+                  </p>
+                </div>
               </div>
-            </Card>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <form className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label
+                    htmlFor="first-name"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    First name
+                  </label>
+                  <Input id="first-name" placeholder="Enter your first name" />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="last-name"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Last name
+                  </label>
+                  <Input id="last-name" placeholder="Enter your last name" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="email"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Email
+                </label>
+                <Input id="email" type="email" placeholder="Enter your email" />
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="subject"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Subject
+                </label>
+                <Input id="subject" placeholder="Enter the subject" />
+              </div>
+              <div className="space-y-2">
+                <label
+                  htmlFor="message"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                  Message
+                </label>
+                <Textarea id="message" placeholder="Enter your message" className="min-h-[150px]" />
+              </div>
+              <Button type="submit" className="w-full">
+                Send Message
+              </Button>
+            </form>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    {/* Map Section */}
+    <section className="w-full py-12 md:py-24 bg-muted/30">
+      <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center text-center space-y-4 mb-8">
+          <h2 className="text-3xl font-serif font-bold tracking-tighter">Visit Us</h2>
+          <p className="max-w-[700px] text-muted-foreground">We'd love to meet you in person at our office.</p>
+        </div>
+        <div className="aspect-video overflow-hidden rounded-xl bg-muted/50">
+          {/* This would be a map in production */}
+          <div className="flex items-center justify-center h-full">
+            <p className="text-muted-foreground">Map Placeholder</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
   );
 }

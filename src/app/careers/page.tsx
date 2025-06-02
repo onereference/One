@@ -1,106 +1,244 @@
+import type { Metadata } from "next"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
-import { Briefcase, MapPin, Users, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Award, Users, Globe, CheckCircle, Clock, FileText, BarChart } from "lucide-react"
 
-const jobOpenings = [
-  {
-    title: "Senior Frontend Engineer (React/Next.js)",
-    location: "Remote (Global)",
-    department: "Engineering",
-    type: "Full-time",
-    link: "/careers/frontend-engineer",
+export const metadata: Metadata = {
+  title: "Careers at OneReference | Join Our Team",
+  description:
+    "Explore career opportunities at OneReference and be part of a team that is revolutionizing the reference checking process.",
+  openGraph: {
+    title: "Careers at OneReference | Join Our Team",
+    description:
+      "Explore career opportunities at OneReference and be part of a team that is revolutionizing the reference checking process.",
+    url: "https://onereference.com/careers",
+    siteName: "OneReference",
+    images: [
+      {
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "OneReference Careers",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
   },
-  {
-    title: "Product Marketing Manager",
-    location: "London, UK (Hybrid)",
-    department: "Marketing",
-    type: "Full-time",
-    link: "/careers/product-marketing-manager",
-  },
-  {
-    title: "Customer Success Advocate",
-    location: "Remote (US Timezones)",
-    department: "Customer Support",
-    type: "Full-time",
-    link: "/careers/customer-success",
-  },
-];
+}
 
 export default function CareersPage() {
   return (
-    <div className="bg-slate-900 text-white min-h-screen py-16">
-      <div className="container mx-auto px-4">
+    <>
+    
+      <main className="flex-1">
         {/* Hero Section */}
-        <section className="text-center mb-16 md:mb-20">
-          <h1 className="text-5xl font-bold font-headline mb-6 text-primary">Join Our Team</h1>
-          <p className="text-xl text-slate-300 max-w-3xl mx-auto mb-8">
-            We're building the future of reference management and looking for passionate, talented individuals to help us on our mission.
-          </p>
-          <Image 
-            src="https://placehold.co/800x350.png" 
-            alt="Happy and diverse team working together" 
-            width={800} 
-            height={350} 
-            className="rounded-lg shadow-xl mx-auto"
-            data-ai-hint="diverse team realistic people working"
-          />
-        </section>
-
-        {/* Why Work With Us Section */}
-        <section className="mb-16 md:mb-20">
-          <h2 className="text-4xl font-bold font-headline text-center mb-10 text-white">Why OneReference?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="bg-slate-800 border-slate-700 text-center p-6">
-              <Users className="w-12 h-12 text-primary mx-auto mb-4" />
-              <CardTitle className="text-2xl text-white mb-2">Impactful Work</CardTitle>
-              <CardContent><p className="text-slate-400">Shape a product that helps thousands of individuals and agencies.</p></CardContent>
-            </Card>
-            <Card className="bg-slate-800 border-slate-700 text-center p-6">
-              <Zap className="w-12 h-12 text-primary mx-auto mb-4" />
-              <CardTitle className="text-2xl text-white mb-2">Growth & Learning</CardTitle>
-              <CardContent><p className="text-slate-400">Thrive in a dynamic environment with opportunities for professional development.</p></CardContent>
-            </Card>
-            <Card className="bg-slate-800 border-slate-700 text-center p-6">
-              <MapPin className="w-12 h-12 text-primary mx-auto mb-4" />
-              <CardTitle className="text-2xl text-white mb-2">Flexible Culture</CardTitle>
-              <CardContent><p className="text-slate-400">We embrace remote and hybrid work, focusing on results and well-being.</p></CardContent>
-            </Card>
+        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-radial from-primary/10 to-background">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center space-y-4">
+              <h1 className="text-3xl font-serif font-bold tracking-tighter sm:text-4xl md:text-5xl">Join Our Team</h1>
+              <p className="max-w-[700px] text-muted-foreground md:text-xl">
+                Be part of a company that is transforming the reference checking process for job seekers and agencies.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Current Openings Section */}
-        <section>
-          <h2 className="text-4xl font-bold font-headline text-center mb-10 text-white">Current Openings</h2>
-          {jobOpenings.length > 0 ? (
-            <div className="space-y-6 max-w-3xl mx-auto">
-              {jobOpenings.map((job, index) => (
-                <Card key={index} className="bg-slate-800 border-slate-700 hover:border-primary transition-colors">
-                  <CardHeader>
-                    <CardTitle className="text-2xl text-primary">{job.title}</CardTitle>
-                    <CardDescription className="text-slate-400">
-                      <span className="flex items-center"><MapPin className="w-4 h-4 mr-2" />{job.location}</span>
-                      <span className="flex items-center"><Briefcase className="w-4 h-4 mr-2" />{job.department} - {job.type}</span>
-                    </CardDescription>
-                  </CardHeader>
-                  <CardFooter>
-                    <Link href={job.link} passHref>
-                      <Button variant="outline" className="text-primary border-primary hover:bg-primary/10">View Details & Apply</Button>
-                    </Link>
-                  </CardFooter>
-                </Card>
-              ))}
+        {/* Why OneReference Section */}
+        <section className="w-full py-12 md:py-24">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center space-y-4 mb-12">
+              <h2 className="text-3xl font-serif font-bold tracking-tighter">Why OneReference?</h2>
+              <p className="max-w-[700px] text-muted-foreground">
+                Discover the benefits of working at OneReference and how we support our employees.
+              </p>
             </div>
-          ) : (
-            <p className="text-center text-lg text-slate-400">
-              We don't have any open positions at the moment, but we're always interested in hearing from talented people. 
-              Feel free to <Link href="/contact" className="text-primary hover:underline">get in touch</Link>!
-            </p>
-          )}
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Award className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Impactful Work</h3>
+                <p className="text-center text-muted-foreground">
+                  Make a real difference in the lives of job seekers and hiring professionals.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Collaborative Culture</h3>
+                <p className="text-center text-muted-foreground">
+                  Work with a talented and supportive team that values collaboration and innovation.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Globe className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Growth Opportunities</h3>
+                <p className="text-center text-muted-foreground">
+                  Advance your career with opportunities for professional development and growth.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <CheckCircle className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Competitive Benefits</h3>
+                <p className="text-center text-muted-foreground">
+                  Enjoy a comprehensive benefits package, including health insurance, paid time off, and more.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Clock className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Flexible Work Environment</h3>
+                <p className="text-center text-muted-foreground">
+                  Maintain a healthy work-life balance with flexible work arrangements.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Meaningful Mission</h3>
+                <p className="text-center text-muted-foreground">
+                  Contribute to a mission-driven company that is making a positive impact on the world of work.
+                </p>
+              </div>
+            </div>
+          </div>
         </section>
-      </div>
-    </div>
-  );
+
+        {/* Open Positions Section */}
+        <section className="w-full py-12 md:py-24 bg-muted/30">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center space-y-4 mb-12">
+              <h2 className="text-3xl font-serif font-bold tracking-tighter">Open Positions</h2>
+              <p className="max-w-[700px] text-muted-foreground">
+                Explore our current job openings and find the perfect fit for your skills and experience.
+              </p>
+            </div>
+
+            <div className="flex justify-center items-center py-12">
+              <div className="text-center max-w-md">
+                <h3 className="text-xl font-bold mb-4">We are not currently hiring</h3>
+                <p className="text-muted-foreground mb-6">
+                  Thank you for your interest in joining our team. While we don't have any open positions at the moment,
+                  we're always looking for talented individuals.
+                </p>
+                <p className="mb-6">Please check back later or submit your resume for future consideration.</p>
+                <Link href="/contact">
+                  <Button>Contact Us</Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Benefits Section */}
+        <section className="w-full py-12 md:py-24">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center text-center space-y-4 mb-12">
+              <h2 className="text-3xl font-serif font-bold tracking-tighter">Employee Benefits</h2>
+              <p className="max-w-[700px] text-muted-foreground">
+                We offer a comprehensive benefits package to support our employees' well-being and success.
+              </p>
+            </div>
+
+            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <CheckCircle className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Health Insurance</h3>
+                <p className="text-center text-muted-foreground">
+                  Comprehensive health, dental, and vision insurance plans.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Clock className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Paid Time Off</h3>
+                <p className="text-center text-muted-foreground">
+                  Generous paid time off policy for vacation, sick leave, and holidays.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <BarChart className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Professional Development</h3>
+                <p className="text-center text-muted-foreground">
+                  Opportunities for professional development, training, and conferences.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <FileText className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Retirement Plan</h3>
+                <p className="text-center text-muted-foreground">
+                  401(k) retirement plan with company matching contributions.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Users className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Employee Assistance Program</h3>
+                <p className="text-center text-muted-foreground">
+                  Access to confidential counseling and support services.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6">
+                <div className="rounded-full bg-primary/10 p-3">
+                  <Award className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="text-xl font-serif font-bold">Performance Bonuses</h3>
+                <p className="text-center text-muted-foreground">Performance-based bonuses and recognition programs.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="w-full py-12 md:py-24 bg-primary text-primary-foreground">
+          <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <h2 className="text-3xl font-serif font-bold tracking-tighter sm:text-4xl">Ready to Join Our Team?</h2>
+                <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  Explore our open positions and take the next step in your career with OneReference.
+                </p>
+              </div>
+              <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                <Link href="/contact">
+                  <Button size="lg" variant="secondary" className="w-full min-[400px]:w-auto">
+                    View Openings
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+ 
+    </>
+  )
 }

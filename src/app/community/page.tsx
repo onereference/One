@@ -12,8 +12,8 @@ export default function PublicCommunityPage() {
   const { isLoggedIn } = useAuth();
 
   return (
-    <div className="space-y-8">
-      <div className="text-center py-8 bg-card rounded-lg shadow">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center px-4 space-y-8">
+      <div className="text-center py-8 bg-card rounded-lg shadow w-full max-w-5xl">
         <Users className="mx-auto h-16 w-16 text-primary mb-4" />
         <h1 className="text-4xl font-bold font-headline">Onereference Community</h1>
         <p className="mt-2 text-lg text-muted-foreground">
@@ -28,7 +28,7 @@ export default function PublicCommunityPage() {
             </Link>
           </div>
         )}
-         {isLoggedIn && (
+        {isLoggedIn && (
           <div className="mt-6">
             <Link href="/individual/dashboard/community">
               <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
@@ -39,7 +39,7 @@ export default function PublicCommunityPage() {
         )}
       </div>
 
-      <div className="flex items-center gap-2 p-4 border rounded-lg">
+      <div className="flex items-center gap-2 p-4 border rounded-lg w-full max-w-3xl">
         <Search className="h-5 w-5 text-muted-foreground" />
         <Input 
           type="search" 
@@ -49,18 +49,19 @@ export default function PublicCommunityPage() {
         <Button variant="outline">Search</Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-7xl">
         {mockCommunityPosts.map((post) => (
           <CommunityPostCard key={post.id} post={post} interactive={false} />
         ))}
       </div>
-       {mockCommunityPosts.length === 0 && (
-         <div className="text-center py-12 col-span-full">
+
+      {mockCommunityPosts.length === 0 && (
+        <div className="text-center py-12 col-span-full">
           <Users className="mx-auto h-12 w-12 text-muted-foreground" />
           <h3 className="mt-2 text-xl font-semibold">No Posts Yet</h3>
           <p className="mt-1 text-muted-foreground">Be the first to start a discussion!</p>
         </div>
-       )}
+      )}
     </div>
   );
 }

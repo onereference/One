@@ -81,7 +81,7 @@ export function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <div className="relative h-8 w-8 md:h-10 md:w-10">
               <Image
-                src="https://placehold.co/40x40.png"
+                src="/images/logo.png"
                 alt="OneReference Logo"
                 data-ai-hint="logo abstract"
                 fill
@@ -102,7 +102,7 @@ export function Navbar() {
           <Link href="/features" className="text-base font-medium transition-colors hover:text-primary">
             Features
           </Link>
-           <Link href="/agency-pricing" className="text-base font-medium transition-colors hover:text-primary">
+           <Link href="/pricing" className="text-base font-medium transition-colors hover:text-primary">
             Pricing
           </Link>
           <Link href="/about" className="text-base font-medium transition-colors hover:text-primary">
@@ -110,6 +110,9 @@ export function Navbar() {
           </Link>
           <Link href="/contact" className="text-base font-medium transition-colors hover:text-primary">
             Contact
+          </Link>
+          <Link href="/community" className="text-base font-medium transition-colors hover:text-primary">
+            Community
           </Link>
         </nav>
 
@@ -232,7 +235,7 @@ export function Navbar() {
               Features
             </Link>
             <Link
-              href="/agency-pricing"
+              href="/pricing"
               className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
               onClick={() => setIsMenuOpen(false)}
             >

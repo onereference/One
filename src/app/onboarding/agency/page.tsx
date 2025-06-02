@@ -22,21 +22,24 @@ import { useAuth } from "@/contexts/auth-context";
 import { useToast } from "@/hooks/use-toast";
 import { useRouter } from "next/navigation";
 import { Briefcase, UploadCloud, Globe, Phone, Tag, Info } from "lucide-react";
+import { db, storage } from '@/lib/firebase';
+import { doc, setDoc, updateDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const agencyOnboardingSchema = z.object({
   agencyName: z.string().min(2, "Agency name is required."),
-  agencyLogo: z.any().optional(), // For file upload
+  agencyLogo: z.any().optional(), 
   agencyWebsite: z.string().url("Invalid URL.").optional().or(z.literal("")),
   location: z.string().min(2, "Location is required."),
-  phoneNumber: z.string().min(5, "Phone number is required.").optional(), // Simplified
-  professionsYouHire: z.string().optional(), // Comma-separated tags
+  phoneNumber: z.string().min(5, "Phone number is required.").optional(), 
+  professionsYouHire: z.string().optional(), 
   aboutYourAgency: z.string().min(10, "Please provide a short description.").max(500, "Description too long."),
 });
 
 type AgencyOnboardingValues = z.infer<typeof agencyOnboardingSchema>;
 
 export default function AgencyOnboardingPage() {
-  const { completeOnboarding, userEmail } = useAuth();
+  const { currentUser, completeOnboarding, userProfile } = useAuth();
   const { toast } = useToast();
   const router = useRouter();
 
@@ -53,35 +56,71 @@ export default function AgencyOnboardingPage() {
   });
 
   async function onSubmit(values: AgencyOnboardingValues) {
-    console.log("Agency Onboarding Data:", values);
-    // TODO: Implement Firebase call to save agency data and upload logo to Firebase Storage.
-    // Example:
-    // if (values.agencyLogo) {
-    //   const logoRef = firebase.storage().ref(`agency_logos/${userEmail}-${values.agencyLogo.name}`);
-    //   await logoRef.put(values.agencyLogo);
-    //   values.agencyLogoUrl = await logoRef.getDownloadURL();
-    // }
-    // await firebase.firestore().collection('agencies').doc(userEmail).set(values);
-    
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
-    toast({
-      title: "Onboarding Complete!",
-      description: "Your agency profile has been set up.",
-    });
-    completeOnboarding();
+    if (!currentUser) {
+      toast({ title: "Error", description: "You must be logged in.", variant: "destructive" });
+      router.push('/login');
+      return;
+    }
+    form.formState.isSubmitting = true;
+
+    try {
+      let logoUrl = "";
+      if (values.agencyLogo && values.agencyLogo instanceof File) {
+        const logoFile = values.agencyLogo as File;
+        const logoRef = ref(storage, `agency_logos/${currentUser.uid}/${logoFile.name}`);
+        await uploadBytes(logoRef, logoFile);
+        logoUrl = await getDownloadURL(logoRef);
+      }
+
+      const agencyData = {
+        ...values,
+        agencyLogoUrl: logoUrl,
+        userId: currentUser.uid,
+        // Remove file object from data to be saved in Firestore
+        agencyLogo: undefined, 
+      };
+      
+      const agencyDocRef = doc(db, 'agencies', currentUser.uid);
+      await setDoc(agencyDocRef, agencyData, { merge: true });
+      
+      await completeOnboarding(); // This will update userProfile and redirect
+
+      toast({
+        title: "Onboarding Complete!",
+        description: "Your agency profile has been set up.",
+      });
+    } catch (error: any) {
+      console.error("Agency Onboarding Error:", error);
+      toast({ title: "Onboarding Failed", description: error.message || "Could not save agency details.", variant: "destructive" });
+    } finally {
+        form.formState.isSubmitting = false;
+    }
   }
 
-  const handleSkip = () => {
+  const handleSkip = async () => {
+    if (!currentUser) {
+        toast({ title: "Error", description: "You must be logged in to skip.", variant: "destructive" });
+        router.push('/login');
+        return;
+    }
     toast({
       title: "Onboarding Skipped",
       description: "You can complete your profile later from settings.",
       variant: "default"
     });
-    completeOnboarding();
+    await completeOnboarding(); // This updates the user's main profile and redirects
   };
   
-  // Placeholder countries
   const countries = ["United States", "United Kingdom", "Canada", "Australia", "Germany"];
+
+  if (!userProfile || userProfile.userType !== 'agency') {
+    // This check helps prevent individuals from accessing agency onboarding
+    // or if profile hasn't loaded yet.
+    // Auth context's onAuthStateChanged should also handle redirection if type mismatch.
+    if (!currentUser && !useAuth().isLoading) router.push('/login'); // Not logged in and not loading
+    // else if (userProfile && userProfile.userType !== 'agency') router.push('/individual/dashboard'); // Wrong type
+    return <div className="flex items-center justify-center h-screen"><p>Loading or redirecting...</p></div>;
+  }
 
 
   return (
@@ -111,11 +150,15 @@ export default function AgencyOnboardingPage() {
             <FormField
               control={form.control}
               name="agencyLogo"
-              render={({ field }) => (
+              render={({ field }) => ( // field value will be File object or null
                 <FormItem>
                   <FormLabel className="flex items-center"><UploadCloud className="mr-2 h-4 w-4 text-muted-foreground"/>Agency Logo</FormLabel>
                   <FormControl>
-                    <Input type="file" accept="image/*" onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)} />
+                    <Input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={(e) => field.onChange(e.target.files ? e.target.files[0] : null)} 
+                    />
                   </FormControl>
                   <FormDescription>Upload your agency's logo (PNG, JPG).</FormDescription>
                   <FormMessage />
@@ -212,7 +255,7 @@ export default function AgencyOnboardingPage() {
               <Button type="submit" className="w-full sm:w-auto" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Saving..." : "Save & Continue"}
               </Button>
-              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={handleSkip}>
+              <Button type="button" variant="outline" className="w-full sm:w-auto" onClick={handleSkip} disabled={form.formState.isSubmitting}>
                 Skip for Now
               </Button>
             </div>

@@ -62,7 +62,7 @@ export default function Hero() {
                   <Image src="/abstract-profile.png" alt="Designer" width={30} height={30} className="rounded-full" />
                 </div>
                 <div>
-                  <p className="text-xs font-medium">Great Designer</p>
+                  <p className="text-xs font-medium">Good Doctor</p>
                   <div className="flex">
                     {[...Array(5)].map((_, i) => (
                       <span key={i} className="text-primary text-xs">
@@ -92,12 +92,12 @@ export default function Hero() {
             </div>
 
             {/* User Profile Tag */}
-            <div className="absolute bottom-24 right-4 md:right-0 bg-white rounded-full pl-2 pr-4 py-1 shadow-md flex items-center gap-2 z-10">
+            <div className="absolute bottom-24 right-4 md:right-0 bg-background rounded-full pl-2 pr-4 py-1 shadow-md flex items-center gap-2 z-10">
               <div className="w-8 h-8 bg-[#ffd280] rounded-full flex items-center justify-center">
                 <Image src="/placeholder.svg?key=oa4h6" alt="Gavin" width={30} height={30} className="rounded-full" />
               </div>
               <div>
-                <p className="text-xs font-medium">Gavin Henry</p>
+                <p className="text-xs text-gray-500 font-medium">Gavin Henry</p>
                 <p className="text-xs text-gray-500">1m ago</p>
               </div>
               <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-xs text-white font-medium ml-1">

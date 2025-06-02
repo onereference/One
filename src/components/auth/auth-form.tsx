@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -20,7 +19,20 @@ import { useAuth, type UserType } from "@/contexts/auth-context";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
-import { Chrome, Linkedin, Facebook, KeyRound, Smartphone } from "lucide-react"; // Assuming icons
+import { Chrome, Linkedin, Facebook, KeyRound, Smartphone } from "lucide-react";
+import { auth, db } from '@/lib/firebase';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  OAuthProvider, // For LinkedIn, though it's more complex and often needs custom setup
+  signInWithPopup,
+  sendPasswordResetEmail, // For Magic Link (passwordless) or password reset
+  RecaptchaVerifier, 
+  signInWithPhoneNumber 
+} from 'firebase/auth';
+import { doc, setDoc, serverTimestamp } from 'firebase/firestore';
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email address." }),
@@ -38,11 +50,11 @@ const formSchema = z.object({
 
 interface AuthFormProps {
   mode: "login" | "signup";
-  userType: UserType;
+  userType: UserType; // This is the selectedUserType from AuthContext passed as a prop
 }
 
 export function AuthForm({ mode, userType }: AuthFormProps) {
-  const { login, signup } = useAuth(); // Use new signup method
+  const authContext = useAuth();
   const router = useRouter();
   const { toast } = useToast();
 
@@ -56,26 +68,50 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    // TODO: Implement actual Firebase Authentication calls here.
-    // For signup: firebase.auth().createUserWithEmailAndPassword(values.email, values.password)
-    // For login: firebase.auth().signInWithEmailAndPassword(values.email, values.password)
-    // Then, on successful Firebase auth, call the context's login/signup.
-    
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
+    form.formState.isSubmitting = true;
+    try {
+      if (mode === "signup") {
+        if (!userType) {
+          toast({ title: "Error", description: "User type not selected. Please select a user type first.", variant: "destructive" });
+          router.push("/user-type-selection");
+          form.formState.isSubmitting = false;
+          return;
+        }
+        const userCredential = await createUserWithEmailAndPassword(auth, values.email, values.password);
+        const firebaseUser = userCredential.user;
+        
+        // Create user profile document in Firestore
+        const userDocRef = doc(db, 'users', firebaseUser.uid);
+        await setDoc(userDocRef, {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          userType: userType,
+          onboardingComplete: false,
+          createdAt: serverTimestamp(),
+        });
+        // The onAuthStateChanged listener in AuthContext will pick this up and redirect to onboarding.
+        toast({
+          title: "Account Created!",
+          description: "You have successfully signed up. Proceeding to onboarding.",
+        });
 
-    if (mode === "signup") {
+      } else { // Login mode
+        await signInWithEmailAndPassword(auth, values.email, values.password);
+        // The onAuthStateChanged listener in AuthContext will handle fetching profile and redirection.
+        toast({
+          title: "Logged In!",
+          description: "Welcome back.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Firebase Auth Error:", error);
       toast({
-        title: "Account Created!",
-        description: "You have successfully signed up. Proceeding to onboarding.",
+        title: "Authentication Failed",
+        description: error.message || "An unexpected error occurred.",
+        variant: "destructive",
       });
-      signup(userType, values.email); // Pass email for potential prefill
-      // signup will handle redirection to onboarding
-    } else {
-      toast({
-        title: "Logged In!",
-        description: "Welcome back.",
-      });
-      login(userType, values.email); // login will check onboarding status
+    } finally {
+        form.formState.isSubmitting = false;
     }
   }
 
@@ -84,23 +120,101 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
   const alternativeActionText = mode === "login" ? "Don't have an account?" : "Already have an account?";
   const alternativeActionLink = mode === "login" ? "/signup" : "/login";
 
-  if (!userType) {
-    router.push('/');
-    return <p>Redirecting...</p>;
+  if (!userType && !authContext.isLoading) { // Ensure not to redirect during initial load
+    router.push('/user-type-selection');
+    return <p>Redirecting to user type selection...</p>;
   }
+  
+  const handleSocialLogin = async (providerName: string) => {
+    let provider;
+    switch (providerName) {
+      case "Google":
+        provider = new GoogleAuthProvider();
+        break;
+      case "Facebook":
+        provider = new FacebookAuthProvider();
+        break;
+      // LinkedIn with Firebase is tricky and often requires a custom solution or Cloud Functions.
+      // This is a simplified stub.
+      case "LinkedIn":
+        toast({ title: "LinkedIn Login", description: "LinkedIn login is complex with Firebase direct SDK. Placeholder.", variant: "default" });
+        // provider = new OAuthProvider('linkedin.com'); // This often requires more setup
+        return; 
+      default:
+        toast({ title: "Error", description: "Unknown provider", variant: "destructive" });
+        return;
+    }
 
-  const handleSocialLogin = (provider: string) => {
-    toast({
-      title: `Login with ${provider}`,
-      description: `Attempting to log in with ${provider}... (Not implemented)`,
-    });
-    // TODO: In a real app, call Firebase auth methods here (e.g., new firebase.auth.GoogleAuthProvider()).
-    // For now, simulate login and redirect
-    // login(userType, `${provider.toLowerCase()}@example.com`); 
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+      
+      // Check if user exists in Firestore, if not, create profile (especially for first-time social login)
+      const userDocRef = doc(db, 'users', firebaseUser.uid);
+      const userDocSnap = await getDoc(userDocRef);
+
+      if (!userDocSnap.exists()) {
+        if (!userType) {
+            toast({ title: "User Type Needed", description: "Please select a user type before completing social sign-up.", variant: "destructive" });
+            // Potentially sign out the Firebase user and redirect
+            await firebaseSignOut(auth);
+            router.push('/user-type-selection');
+            return;
+        }
+        await setDoc(userDocRef, {
+          uid: firebaseUser.uid,
+          email: firebaseUser.email,
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          userType: userType, // Use the prop `userType` which is the selectedUserType
+          onboardingComplete: false,
+          createdAt: serverTimestamp(),
+        });
+         toast({ title: "Social Sign-up Complete!", description: "Proceeding to onboarding."});
+      } else {
+         toast({ title: "Social Login Successful!", description: "Welcome back." });
+      }
+      // onAuthStateChanged will handle redirection
+    } catch (error: any) {
+      console.error("Social Login Error:", error);
+      toast({ title: "Social Login Failed", description: error.message, variant: "destructive" });
+    }
   };
+  
+  const handleMagicLink = async () => {
+    const email = form.getValues("email");
+    if (!email) {
+      toast({ title: "Email Required", description: "Please enter your email to receive a magic link.", variant: "destructive" });
+      return;
+    }
+    try {
+      // For a true magic link, you'd use sendSignInLinkToEmail
+      // For password reset as "magic link":
+      await sendPasswordResetEmail(auth, email);
+      toast({ title: "Password Reset Email Sent", description: "If an account exists for this email, a password reset link has been sent." });
+    } catch (error: any) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    }
+  };
+
+  const handlePhoneSignIn = () => {
+    // Phone Sign-In requires more setup (RecaptchaVerifier, UI for code input)
+    // This is a placeholder.
+    toast({ title: "Phone Sign-In", description: "Phone Sign-In is not fully implemented in this prototype." });
+    // Example structure (incomplete):
+    // const phoneNumber = prompt("Enter phone number with country code:");
+    // if (phoneNumber) {
+    //   const appVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', { size: 'invisible' });
+    //   signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+    //     .then((confirmationResult) => { /* ... */ })
+    //     .catch((error) => { /* ... */ });
+    // }
+  };
+
 
   return (
     <div className="w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-xl">
+      <div id="recaptcha-container" /> {/* For phone auth if implemented */}
       <div className="text-center">
         <h1 className="text-3xl font-bold text-primary font-headline">
           {pageTitle} as {userType === "agency" ? "an Agency" : "an Individual"}
@@ -179,11 +293,11 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
         <Button variant="outline" onClick={() => handleSocialLogin("Facebook")}>
           <Facebook className="mr-2 h-4 w-4" /> Facebook
         </Button>
-        <Button variant="outline" onClick={() => handleSocialLogin("MagicLink")}>
+        <Button variant="outline" onClick={handleMagicLink}>
           <KeyRound className="mr-2 h-4 w-4" /> Magic Link
         </Button>
       </div>
-      <Button variant="outline" className="w-full" onClick={() => handleSocialLogin("Phone")}>
+      <Button variant="outline" className="w-full" onClick={handlePhoneSignIn}>
         <Smartphone className="mr-2 h-4 w-4" /> Sign in with Phone
       </Button>
 
@@ -194,7 +308,7 @@ export function AuthForm({ mode, userType }: AuthFormProps) {
         </Link>
       </div>
        <div className="text-center text-sm">
-        <Link href="/" className="font-medium text-muted-foreground hover:text-primary hover:underline">
+        <Link href="/user-type-selection" className="font-medium text-muted-foreground hover:text-primary hover:underline">
           Change user type
         </Link>
       </div>

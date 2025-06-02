@@ -34,7 +34,7 @@ export default function LandingPage() {
 
   // If not logged in, show the new landing page content
   return (
-    <div className="bg-slate-900">
+    <div className="">
       <Hero /> {/* Corrected usage */}
       <Features /> {/* Corrected usage */}
       <HowItWorks /> {/* Corrected usage */}
