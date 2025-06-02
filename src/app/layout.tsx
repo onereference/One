@@ -3,9 +3,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
-import Navbar from '@/components/layout/navbar';
+import { Navbar } from '@/components/layout/navbar'; // Corrected import
 import { AuthProvider } from '@/contexts/auth-context';
-import { PageFooter } from '@/components/layout/page-footer'; // Import the new footer
+import { PageFooter } from '@/components/layout/page-footer'; 
 
 export const metadata: Metadata = {
   title: 'OneReference',
@@ -28,15 +28,15 @@ export default function RootLayout({
         <AuthProvider>
           <ThemeProvider
             attribute="class"
-            defaultTheme="dark" // Set default to dark as per new landing page design
+            defaultTheme="dark" 
             enableSystem
             disableTransitionOnChange
           >
             <Navbar />
-            <main className="flex-grow"> {/* Removed container and padding to allow full-width sections */}
+            <main className="flex-grow"> 
               {children}
             </main>
-            <PageFooter /> {/* Add the new PageFooter here */}
+            <PageFooter /> 
             <Toaster />
           </ThemeProvider>
         </AuthProvider>

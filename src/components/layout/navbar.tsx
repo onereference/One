@@ -1,12 +1,15 @@
 
-"use client";
+"use client"
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { ThemeToggle } from "./theme-toggle";
-import { Logo } from "@/components/icons/logo";
-import { useAuth } from "@/contexts/auth-context";
-import { User, LogOut, Building, Briefcase, LayoutDashboard } from "lucide-react";
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import Image from "next/image"
+import { usePathname, useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { ThemeToggle } from "@/components/layout/theme-toggle"
+import { useAuth } from "@/contexts/auth-context"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,95 +17,288 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+} from "@/components/ui/dropdown-menu"
+import { Menu, X, User, Settings, LogOut } from "lucide-react"
 
-export default function Navbar() {
-  const { isLoggedIn, userType, logout, isLoading, userEmail } = useAuth();
+export function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isMounted, setIsMounted] = useState(false)
+  const pathname = usePathname()
+  const router = useRouter()
+  const auth = useAuth()
 
-  const navLinks = [
-    { href: "/how-it-works", label: "How It Works" },
-    { href: "/features", label: "Features" },
-    { href: "/about", label: "About" },
-    { href: "/contact", label: "Contact" },
-  ];
+  // Ensure component is mounted before accessing auth
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
-  if (isLoading) {
-    return (
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-primary">
-            <Logo />
-            <span className="font-bold text-xl font-headline">OneReference</span>
-          </Link>
-          <div className="h-8 w-20 animate-pulse rounded-md bg-muted"></div> {/* Skeleton for buttons */}
-        </div>
-      </header>
-    );
+  // Close mobile menu when navigating
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [pathname])
+
+  // Prevent body scroll when menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = "hidden"
+    } else {
+      document.body.style.overflow = "auto"
+    }
+
+    return () => {
+      document.body.style.overflow = "auto"
+    }
+  }, [isMenuOpen])
+
+  const handleSignOut = async () => {
+    // In a real app, you'd call your Firebase logout function here
+    // await firebase.auth().signOut();
+    auth.logout() // Using context's logout
+    router.push("/") // Redirect to landing page after logout
   }
 
+  // Get user initials for avatar fallback
+  const getUserInitials = () => {
+    if (!auth?.userEmail) return "U"
+    return auth.userEmail.charAt(0).toUpperCase()
+  }
+
+  // Get profile image URL from cached data (placeholder for now)
+  const getProfileImageUrl = () => {
+    // Replace with actual logic to get profile image URL
+    // For example, from auth.userProfile.profile_pic_path or auth.userProfile.logo_path
+    return "" // For now, empty to use fallback
+  }
+
+  // Don't render auth-dependent content until mounted and auth state is clear
+  const showAuthContent = isMounted && !auth.isLoading
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-slate-700 bg-slate-900 text-white"> {/* Adjusted for dark theme */}
-      <div className="container flex h-16 items-center mx-auto px-4">
-        <Link href="/" className="flex items-center gap-2 mr-6 text-primary">
-          <Logo className="text-primary" />
-          <span className="font-bold text-xl font-headline text-white">OneReference</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-4 text-sm lg:gap-6">
-          {navLinks.map(link => (
-            <Link key={link.href} href={link.href} className="text-slate-300 transition-colors hover:text-white">
-              {link.label}
-            </Link>
-          ))}
-           <Link href="/community" className="text-slate-300 transition-colors hover:text-white">
-            Community
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container max-w-screen-3xl mx-auto px-4 sm:px-6 lg:px-8 flex h-16 md:h-20 items-center justify-between transition-all duration-200">
+        {/* Logo on the left */}
+        <div className="flex items-center">
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="relative h-8 w-8 md:h-10 md:w-10">
+              <Image
+                src="https://placehold.co/40x40.png"
+                alt="OneReference Logo"
+                data-ai-hint="logo abstract"
+                fill
+                sizes="(max-width: 768px) 32px, 40px"
+                className="object-contain"
+                priority
+              />
+            </div>
+            <span className="text-xl md:text-2xl font-bold font-headline">OneReference</span>
+          </Link>
+        </div>
+
+        {/* Navigation links - desktop */}
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link href="/how-it-works" className="text-base font-medium transition-colors hover:text-primary">
+            How It Works
+          </Link>
+          <Link href="/features" className="text-base font-medium transition-colors hover:text-primary">
+            Features
+          </Link>
+           <Link href="/agency-pricing" className="text-base font-medium transition-colors hover:text-primary">
+            Pricing
+          </Link>
+          <Link href="/about" className="text-base font-medium transition-colors hover:text-primary">
+            About
+          </Link>
+          <Link href="/contact" className="text-base font-medium transition-colors hover:text-primary">
+            Contact
           </Link>
         </nav>
-        <div className="ml-auto flex items-center gap-2 md:gap-4">
-          {isLoggedIn ? (
+
+        {/* Right side elements */}
+        <div className="hidden md:flex items-center gap-3">
+          <ThemeToggle />
+
+          {!showAuthContent ? (
+            <div className="h-10 w-20 bg-muted rounded animate-pulse"></div>
+          ) : auth.isLoggedIn && auth.userType ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-9 w-9 rounded-full hover:bg-slate-700">
-                  <Avatar className="h-9 w-9">
-                    <AvatarImage src="https://placehold.co/40x40.png" alt="User avatar" data-ai-hint="user avatar realistic person"/>
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {userType === 'agency' ? <Building className="h-4 w-4" /> : <User className="h-4 w-4" />}
-                    </AvatarFallback>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={getProfileImageUrl()} alt={auth.userEmail || "User"} />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-slate-800 border-slate-700 text-white" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      {userType === 'agency' ? "Agency Account" : "Individual Account"}
-                    </p>
-                    <p className="text-xs leading-none text-slate-400">
-                      {userEmail || "user@example.com"}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator className="bg-slate-700"/>
-                <DropdownMenuItem asChild className="hover:!bg-slate-700 focus:!bg-slate-700 cursor-pointer">
-                  <Link href={userType === 'agency' ? "/agency/dashboard" : "/individual/dashboard"}>
-                    <LayoutDashboard className="mr-2 h-4 w-4" />
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href={auth.userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard'} className="cursor-pointer flex w-full items-center">
+                    <User className="mr-2 h-4 w-4" />
                     Dashboard
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={logout} className="hover:!bg-slate-700 focus:!bg-slate-700 cursor-pointer">
+                <DropdownMenuItem asChild>
+                  <Link href={auth.userType === 'agency' ? '/agency/dashboard/profile' : '/individual/dashboard/profile'} className="cursor-pointer flex w-full items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={auth.userType === 'agency' ? '/agency/dashboard/settings' : '/individual/dashboard/settings'} className="cursor-pointer flex w-full items-center">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
                   <LogOut className="mr-2 h-4 w-4" />
-                  Log out
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Link href="/user-type-selection">
-              <Button variant="outline" className="text-white border-slate-600 hover:bg-slate-800 hover:text-white">Login</Button>
-            </Link>
+            <>
+              <Link href="/user-type-selection">
+                <Button variant="ghost" className="text-base">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/user-type-selection">
+                <Button className="text-base">Sign Up</Button>
+              </Link>
+            </>
           )}
-          <ThemeToggle />
+        </div>
+
+        {/* Mobile right side controls */}
+        <div className="md:hidden flex items-center gap-2">
+          {showAuthContent && auth.isLoggedIn && auth.userType && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={getProfileImageUrl()} alt={auth.userEmail || "User"} />
+                    <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href={auth.userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard'} className="cursor-pointer flex w-full items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
+          <button className="p-2 z-50 relative" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+            {isMenuOpen ? (
+              <X className="h-6 w-6 transition-transform duration-300 ease-in-out" />
+            ) : (
+              <Menu className="h-6 w-6 transition-transform duration-300 ease-in-out" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      <div
+        className={`fixed inset-0 bg-background z-40 transition-all duration-300 ease-in-out ${
+          isMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+        }`}
+      >
+        <div className="container max-w-screen-xl mx-auto px-4 h-full flex flex-col bg-background pt-20 pb-8">
+          <nav className="flex flex-col bg-background space-y-4 mt-8">
+            <Link
+              href="/how-it-works"
+              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/features"
+              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Features
+            </Link>
+            <Link
+              href="/agency-pricing"
+              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/about"
+              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
+              className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Contact
+            </Link>
+
+            {showAuthContent && !auth.isLoggedIn && (
+              <>
+                <Link
+                  href="/user-type-selection"
+                  className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/user-type-selection"
+                  className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
+
+            {showAuthContent && auth.isLoggedIn && (
+              <>
+                <Link
+                  href={auth.userType === 'agency' ? '/agency/dashboard' : '/individual/dashboard'}
+                  className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={() => {
+                    handleSignOut()
+                    setIsMenuOpen(false)
+                  }}
+                  className="text-2xl font-medium py-3 border-b border-muted transition-colors hover:text-primary text-left"
+                >
+                  Sign Out
+                </button>
+              </>
+            )}
+          </nav>
+
+          <div className="mt-auto items-center py-2 bg-background">
+            <ThemeToggle />
+          </div>
         </div>
       </div>
     </header>
-  );
+  )
 }

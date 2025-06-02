@@ -1,63 +1,119 @@
+import Image from "next/image"
+import Link from "next/link"
+import { Play } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
-"use client";
-import Image from "next/image";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-
-export function HeroSection() {
+export default function Hero() {
   return (
-    <section className="bg-slate-900 text-white py-20 md:py-32">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <span className="text-sm font-semibold text-primary uppercase tracking-wider">
+    <div className="min-h-screen bg-gradient-radial from-primary/20 to-background dark:from-primary/10 dark:to-background">
+      {/* Hero Section */}
+      <section className="container max-w-screen-3xl mx-auto px-4 sm:px-6 py-12 md:py-32 h-screen md:h-auto overflow-hidden">
+        <div className="relative flex flex-col md:flex-row justify-center items-center h-full">
+          {/* Left Content */}
+          <div className="md:w-1/2 z-10 flex flex-col justify-center h-full md:h-auto">
+            <div className="inline-block px-4 py-1 bg-primary/10 dark:bg-primary/20 rounded-full text-sm text-primary w-fit font-medium mb-4">
               Welcome to OneReference
-            </span>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-headline mt-4 mb-6 !leading-tight">
-              Streamline Your <br /> Reference Management
+            </div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+              Streamline Your
+              <br />
+              <span className="text-primary">Reference Management</span>
             </h1>
-            <p className="text-lg text-slate-300 mb-8 max-w-lg">
-              OneReference simplifies the reference process for individuals and
-              hiring agencies, making it easier to manage, verify, and share
-              professional references.
+            <p className="text-muted-foreground mb-8 max-w-md">
+              OneReference simplifies the reference process for individuals and hiring agencies, making it easier to
+              manage, verify, and share professional references.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/user-type-selection" passHref>
-                <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto">
+              <Link href="/">
+                <Button size="lg" className="w-full sm:w-auto">
                   Get Started
                 </Button>
               </Link>
-              <Link href="/how-it-works" passHref>
-                <Button size="lg" variant="outline" className="text-white border-slate-600 hover:bg-slate-800 hover:text-white w-full sm:w-auto">
+              <Link href="/how-it-works">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto flex items-center gap-2">
+                  <div className="flex items-center justify-center w-6 h-6 bg-primary rounded-full">
+                    <Play size={12} className="text-primary-foreground ml-0.5" />
+                  </div>
                   Learn more
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="relative mt-10 md:mt-0">
-            <Image
-              src="https://placehold.co/600x450.png"
-              alt="Reference management process with professionals"
-              width={600}
-              height={450}
-              className="rounded-lg shadow-2xl"
-              data-ai-hint="professional realistic people reference process"
-            />
-            <div className="absolute -bottom-4 -right-4 md:-bottom-8 md:-right-8 bg-white p-3 rounded-lg shadow-xl text-slate-800 w-52">
-                <p className="text-xs text-slate-500">Notification</p>
-                <p className="text-sm font-semibold">Please confirm a reference for Tom Zinner.</p>
+
+          {/* Right Content with Illustration and Floating Elements */}
+          <div className="md:w-1/2 relative mt-12 md:mt-0 hidden md:block">
+            {/* Main Character Illustration */}
+            <div className="relative">
+              <div className="w-72 h-72 md:w-[450px] md:h-[450px] bg-primary/20 dark:bg-primary/10 rounded-3xl mx-auto"></div>
+              <Image
+                src="/images/onehero.png"
+                alt="Reference Hero Page"
+                width={400}
+                height={500}
+                className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 scale-125"
+              />
             </div>
-             <div className="absolute -top-4 -left-4 md:-top-8 md:-left-8 bg-white p-3 rounded-lg shadow-xl text-slate-800 w-40">
-                <p className="text-sm font-semibold">Good Doctor ⭐⭐⭐⭐⭐</p>
-                <p className="text-xs text-slate-500">David H., 1m ago</p>
+
+            {/* Floating Elements */}
+            {/* Great Designer Tag */}
+            <div className="hidden md:block absolute top-0 right-0 md:right-12 bg-background rounded-lg p-2 shadow-md z-10">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
+                  <Image src="/abstract-profile.png" alt="Designer" width={30} height={30} className="rounded-full" />
+                </div>
+                <div>
+                  <p className="text-xs font-medium">Great Designer</p>
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className="text-primary text-xs">
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-             <div className="absolute top-1/2 -translate-y-1/2 right-4 md:right-10 bg-slate-800/50 backdrop-blur-sm p-4 rounded-lg shadow-xl text-center">
-                <p className="text-sm font-bold text-white">REFERENCE</p>
-                <p className="text-lg font-bold text-primary">CONFIRMATION</p>
+
+            {/* Notification Tag */}
+            <div className="hidden md:block absolute bottom-12 left-0 md:-left-6 bg-background rounded-lg p-3 shadow-md z-10">
+              <div className="flex items-start gap-3">
+                <div className="w-8 h-8 bg-primary/20 rounded-md flex items-center justify-center">
+                  <div className="w-4 h-4 bg-primary rounded-sm"></div>
+                </div>
+                <div>
+                  <p className="text-xs text-muted-foreground">Notification</p>
+                  <p className="text-xs font-medium">
+                    Please confirm a reference
+                    <br />
+                    for Tom Zinchenko
+                  </p>
+                </div>
+              </div>
             </div>
+
+            {/* User Profile Tag */}
+            <div className="absolute bottom-24 right-4 md:right-0 bg-white rounded-full pl-2 pr-4 py-1 shadow-md flex items-center gap-2 z-10">
+              <div className="w-8 h-8 bg-[#ffd280] rounded-full flex items-center justify-center">
+                <Image src="/placeholder.svg?key=oa4h6" alt="Gavin" width={30} height={30} className="rounded-full" />
+              </div>
+              <div>
+                <p className="text-xs font-medium">Gavin Henry</p>
+                <p className="text-xs text-gray-500">1m ago</p>
+              </div>
+              <div className="w-5 h-5 bg-primary rounded-full flex items-center justify-center text-xs text-white font-medium ml-1">
+                1
+              </div>
+            </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute top-1/4 right-0 w-6 h-6 bg-primary/30 rounded-full opacity-70 z-0"></div>
+            <div className="absolute bottom-1/3 right-1/4 w-10 h-12 text-primary opacity-80 z-0">📂</div>
+            <div className="absolute top-1/2 left-0 w-4 h-4 bg-primary/20 rounded-full z-0"></div>
+            <div className="absolute bottom-0 right-1/3 w-8 h-8 bg-primary/30 rounded-full opacity-60 z-0"></div>
+            <div className="absolute top-1/3 left-1/4 w-3 h-3 bg-primary/20 rounded-full z-0"></div>
           </div>
         </div>
-      </div>
-    </section>
-  );
+      </section>
+    </div>
+  )
 }

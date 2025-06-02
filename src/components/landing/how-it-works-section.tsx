@@ -1,65 +1,58 @@
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-
-const steps = [
-  {
-    number: "1",
-    title: "Add References",
-    description: "Create your reference list by adding contact information for your professional references.",
-  },
-  {
-    number: "2",
-    title: "Verify & Collect",
-    description: "We contact your references and collect feedback through our secure platform.",
-  },
-  {
-    number: "3",
-    title: "Share & Manage",
-    description: "Share your verified references with potential employers or connect with hiring agencies.",
-  },
-];
-
-export function HowItWorksSection() {
+export function HowItWorks() {
   return (
-    <section className="py-16 md:py-24 bg-slate-800 text-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12 md:mb-16">
-          <span className="text-sm font-semibold text-primary uppercase tracking-wider">
-            Process
-          </span>
-          <h2 className="text-3xl md:text-4xl font-bold font-headline mt-2">
-            How It Works
-          </h2>
-          <p className="mt-4 text-lg text-slate-300 max-w-xl mx-auto">
-            Our simple process makes reference management easy for everyone.
-          </p>
+    <section className="w-full py-12 md:py-24 bg-muted/30">
+      <div className="container max-w-screen-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center">
+          <div className="space-y-2">
+            <div className="inline-block rounded-lg bg-primary px-3 py-1 text-sm text-primary-foreground">Process</div>
+            <h2 className="text-3xl font-serif font-bold tracking-tighter sm:text-5xl">How It Works</h2>
+            <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+              Our simple process makes reference management easy for everyone.
+            </p>
+          </div>
         </div>
-        <div className="grid md:grid-cols-3 gap-8">
-          {steps.map((step) => (
-            <Card key={step.number} className="bg-slate-900 border-slate-700 text-center p-6 transform hover:scale-105 transition-transform duration-300">
-              <CardHeader className="items-center">
-                <div className="bg-primary text-primary-foreground w-12 h-12 rounded-full flex items-center justify-center text-2xl font-bold mb-4">
-                  {step.number}
-                </div>
-                <CardTitle className="text-2xl text-white">{step.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-400">{step.description}</p>
-              </CardContent>
-            </Card>
-          ))}
+        <div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-3">
+          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
+              1
+            </div>
+            <h3 className="text-xl font-bold">Add References</h3>
+            <p className="text-center text-muted-foreground">
+              Create your reference list by adding contact information for your professional references.
+            </p>
+          </div>
+          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
+              2
+            </div>
+            <h3 className="text-xl font-bold">Verify & Collect</h3>
+            <p className="text-center text-muted-foreground">
+              We contact your references and collect feedback through our secure platform.
+            </p>
+          </div>
+          <div className="flex flex-col items-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground">
+              3
+            </div>
+            <h3 className="text-xl font-bold">Share & Manage</h3>
+            <p className="text-center text-muted-foreground">
+              Share your verified references with potential employers or connect with hiring agencies.
+            </p>
+          </div>
         </div>
-        <div className="text-center mt-12">
-          <Link href="/how-it-works" passHref>
-            <Button variant="link" className="text-primary hover:text-primary/90 text-lg">
-              Learn More About Our Process <ArrowRight className="ml-2 h-5 w-5" />
+        <div className="flex justify-center">
+          <Link href="/how-it-works">
+            <Button variant="outline" size="lg">
+              Learn More About Our Process
+              <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </Link>
         </div>
       </div>
     </section>
-  );
+  )
 }
