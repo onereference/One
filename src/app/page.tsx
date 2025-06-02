@@ -4,10 +4,10 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/auth-context";
-import { HeroSection } from "@/components/landing/hero-section";
-import { FeaturesSection } from "@/components/landing/features-section";
-import { HowItWorksSection } from "@/components/landing/how-it-works-section";
-import { CallToActionSection } from "@/components/landing/cta-section";
+import Hero from "@/components/landing/hero-section"; // Corrected import for default export
+import { Features } from "@/components/landing/features-section"; // Corrected import
+import { HowItWorks } from "@/components/landing/how-it-works-section"; // Corrected import
+import { CTA } from "@/components/landing/cta-section"; // Corrected import
 
 export default function LandingPage() {
   const router = useRouter();
@@ -35,10 +35,10 @@ export default function LandingPage() {
   // If not logged in, show the new landing page content
   return (
     <div className="bg-slate-900">
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <CallToActionSection />
+      <Hero /> {/* Corrected usage */}
+      <Features /> {/* Corrected usage */}
+      <HowItWorks /> {/* Corrected usage */}
+      <CTA /> {/* Corrected usage */}
       {/* The PageFooter will be part of RootLayout now */}
     </div>
   );
